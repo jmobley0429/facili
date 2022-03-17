@@ -3,22 +3,101 @@
 *::after {
   box-sizing: border-box;
 }
+
+:root {
+  --primary-color-dark: #f57c00;
+  --primary-color-darker: #da5c01;
+  --primary-color: #ff9800;
+  --primary-color-light: #ffe0b2;
+  --primary-color-text: #212121;
+  --accent-color: #ffc107;
+  --primary-text-color: #212121;
+  --secondary-text-color: #757575;
+  --divider-color: #bdbdbd;
+  --shadow-color: rgba(#212121, 0.77);
+}
 /* global*********************************/
 html,
 body {
   margin: 0;
-  body: 0;
+  padding: 0;
   font-family: "Roboto", sans-serif;
+  color: var(--primary-text-color);
+  background-color: white;
 }
 /* typography *****************************************/
+h1,
+h2,
+h3,
+h4,
+p,
+span {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: white;
+}
 /* sections divs form etc *****************************************/
+header {
+  background-color: var(--primary-color);
+  padding: 1em;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 2rem;
+}
+header::before {
+  width: 100%;
+  height: 1rem;
+  background-color: var(--primary-color-dark);
+  content: "";
+  position: fixed;
+  top: 0;
+}
+
+nav {
+  background-color: var(--primary-color-dark);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1em;
+  gap: 1.5em;
+  box-shadow: 0 -10px 15px rgba(10, 10, 10, 0.92);
+}
 /* buttons + icons  *****************************************/
 button img {
   width: 3rem;
   height: 3rem;
+  filter: invert(0%) sepia(7%) saturate(20%) hue-rotate(333deg) brightness(95%)
+    contrast(100%);
+}
+
+button {
+  background-color: transparent;
+  border-style: none;
 }
 
 /* scripting **********************************************/
 .hidden {
   display: none;
+}
+
+span.warning {
+  color: red;
+  transition: 300ms;
+  color: rgba(0, 0, 0, 0);
+}
+
+span.warning.on {
+  color: red;
 }
