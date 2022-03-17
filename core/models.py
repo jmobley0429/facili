@@ -25,4 +25,4 @@ class FeedItem(models.Model):
 
 class Facilitator(models.Model):
     name = models.CharField(max_length=50)
-    discussion = models.ForeignKey(Discussion, on_delete=models.SET_NULL)
+    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)

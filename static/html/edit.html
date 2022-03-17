@@ -1,4 +1,45 @@
 {% extends "base_generic.html" %}
 {% block content %}
-<p>this is the edit view</p>
+<div class="scroll-list">
+  <div class="header">
+    <h2>Discussion: {{discussion.title}}</h2>
+  </div>
+  <div class="list-body">
+    {% if not all_topics %}
+     <div class="list-item">
+       <h3>No topics yet.</h3>
+       <p>Click add to get started!</p>
+     </div>
+     {% else %}
+     {% for t in all_topics %}
+     <div class="list-item" value={{d.id}}>
+       <h3>{{t.title}}</h3>
+       <p>{{ t.description }}</p>
+     </div>
+     <div class="list-item edit" value="{{t.id}}">
+       <form id="edit-topic" class="" action="" method="post">
+         {% csrf_token %}
+         {{edit_form}}
+         <button type="submit" form="edit-topic" value="{{t.id}}" name="edit-topic">Save Changes</button>
+       </form>
+     </div>
+    {% endif %}
+    {% endfor %}
+    <div class="list-footer">
+      <button type="button" id="editButton" name="button"><img src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
+      <button type="button" id="addButton" name="button"><img src="{% static 'media/plus.svg' %}" alt="Edit"></button>
+      <button type="button" id="shareButton" name="button"><img src="{% static 'media/share.svg' %}" alt="Edit"></button>
+    </div>
+  </div>
+</div>
+<div class="modal-content">
+  <div class="header">
+    <h2>Add New Topic</h2>
+  </div>
+  <form id="add-topic"  action="" method="post">
+         {% csrf_token %}
+         {{ add_form }}
+         <button type="submit" form="add-topic" value="{{discussion.id}}" name="add-topic">Save Topic</button>
+       </form>
+</div>
 {% endblock %}
