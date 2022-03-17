@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  {% block staticfiles %}
+
+  {% endblock staticfiles %}
+  <title>{% if custom_h1%}
+   {{custom_h1}}
+   {% else %}
+   Document
+  {% endif %}</title>
+</head>
+<body>
+  <header>
+    {{custom_h1}}
+    <button type="button" id="hamburger" name="button">Menu</button>
+  </header>
+  <nav>
+    <a href="#">Link</a>
+    <a href="#">Link</a>
+    <a href="#">Link</a>
+    <a href="#">Link</a>
+    <a href="#">Link</a>
+  </nav>
+  <main>
+    {% block content %}
+
+    {% endblock content %}
+  </main>
+
+</body>
+</html>
