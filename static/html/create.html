@@ -1,6 +1,11 @@
 {% extends "base_generic.html" %}
-{% block content %}
 {% load static %}
+{% block staticfiles %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script defer type="text/javascript" src="{% static 'js-bundles/create-bundle.js' %}"></script>
+
+{% endblock staticfiles %}
+{% block content %}
 <div class="scroll-list">
   <div class="header">
     <h2>My Discussions</h2>
@@ -27,9 +32,17 @@
      {% endfor %}
     {% endif %}
     <div class="list-footer">
-      <button type="button" id="editButton" name="button"><img src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
-      <button type="button" id="addButton" name="button"><img src="{% static 'media/plus.svg' %}" alt="Edit"></button>
-      <button type="button" id="shareButton" name="button"><img src="{% static 'media/share.svg' %}" alt="Edit"></button>
+      <div class="button">
+        <button type="button" id="editButton" name="button"><img src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
+        <span class="warning">Select a discussion to edit!</span>
+      </div>
+      <div class="button">
+        <button type="button" id="addButton" name="button"><img src="{% static 'media/plus.svg' %}" alt="Add"></button>
+      </div>
+      <div class="button">
+        <button type="button" id="shareButton" name="button"><img src="{% static 'media/share.svg' %}" alt="Share"></button>
+        <span class="warning">Select a discussion to share!</span>
+      </div>
     </div>
   </div>
 </div>

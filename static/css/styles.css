@@ -1,0 +1,24 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/* global*********************************/
+html,
+body {
+  margin: 0;
+  body: 0;
+  font-family: "Roboto", sans-serif;
+}
+/* typography *****************************************/
+/* sections divs form etc *****************************************/
+/* buttons + icons  *****************************************/
+button img {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* scripting **********************************************/
+.hidden {
+  display: none;
+}

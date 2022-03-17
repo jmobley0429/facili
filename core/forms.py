@@ -3,14 +3,12 @@ from .models import *
 
 
 class DiscussionForm(forms.ModelForm):
-    model = Discussion
-
     class Meta:
+        model = Discussion
         fields = ["title", "description"]
 
 
 class TopicForm(forms.ModelForm):
-    model = Topic
-
     class Meta:
+        model = Topic
         fields = ["title", "description"]

@@ -10,7 +10,6 @@ CONFIG = {
         "redirect_url_name": "create",
         "template_name": "create.html",
         "fk_model": None,
-        "fk_setfunc": None,
     },
     "topic": {
         "model": models.Topic,
@@ -34,10 +33,9 @@ def get_standard_context(context, model=None):
     model_instance = conf["model"]
     form_instance = conf["form"]
     fk_model = conf["fk_model"]
-    fk_setfunc = conf["fk_setfunc"]
     if fk_model:
         pk = context["pk"]
-        all_instances = get_fk_set(model_instance, pk=pk)
+        all_instances = get_fk_set(model, pk=pk)
     else:
         all_instances = model_instance.objects.all()
 
@@ -56,7 +54,7 @@ def process_forms(
     conf = CONFIG[model]
     form = conf["form"]
     url = conf["redirect_url_name"]
-    model = conf["model"]
+    model_class = conf["model"]
     template = conf["template_name"]
 
     # check for presence of edit form
@@ -68,7 +66,7 @@ def process_forms(
         else:
             data = form_instance.cleaned_data
             pk = data["pk"]
-            model_instance = model.objects.get(pk=pk)
+            model_instance = model_class.objects.get(pk=pk)
             model_instance.title = data["title"]
             model_instance.description = data["description"]
             model_instance.save()
@@ -82,7 +80,7 @@ def process_forms(
             return render(request, template, context)
         else:
             data = form_instance.cleaned_data
-            model_instance = model.objects.create(data)
+            model_instance = model_class.objects.create(data)
             model_instance.save()
             return HttpResponseRedirect(url)
 
@@ -92,6 +90,11 @@ class CreateView(View):
     context = {"custom_h1": "Create Discussions"}
 
     def get(self, request, *args, **kwargs):
+        try:
+            pk = self.kwargs["pk"]
+        except KeyError:
+            pk = models.Discussion.objects.all()[0].id
+        self.context["pk"] = pk
         context = get_standard_context(self.context, "discussion")
         return render(request, self.template_name, context=context)
 
@@ -103,9 +106,13 @@ class EditView(View):
     template_name = "edit.html"
     context = {"custom_h1": "Add Topics"}
 
-    def get(self, request, pk, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs["pk"]
+        if pk == None:
+            pk = Discussion.objects.all()[0].id
+        self.context["pk"] = pk
         context = get_standard_context(self.context, "topic")
-        context["discussion"] = Discussion.objects.get(pk=pk)
+        context["discussion"] = models.Discussion.objects.get(pk=pk)
         return render(request, self.template_name, context=context)
 
     def post(self, request, pk, *args, **kwargs):

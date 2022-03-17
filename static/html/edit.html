@@ -1,4 +1,9 @@
 {% extends "base_generic.html" %}
+{% load static %}
+{% block staticfiles %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script type="text/javascript" src="{% static '/js/edit-bundle.js' %}"></script>
+{% endblock staticfiles %}
 {% block content %}
 <div class="scroll-list">
   <div class="header">
@@ -23,8 +28,8 @@
          <button type="submit" form="edit-topic" value="{{t.id}}" name="edit-topic">Save Changes</button>
        </form>
      </div>
+     {% endfor %}
     {% endif %}
-    {% endfor %}
     <div class="list-footer">
       <button type="button" id="editButton" name="button"><img src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
       <button type="button" id="addButton" name="button"><img src="{% static 'media/plus.svg' %}" alt="Edit"></button>
