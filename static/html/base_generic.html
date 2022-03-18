@@ -19,7 +19,7 @@
     <h1>{{custom_h1}}</h1>
     <button type="button" id="hamburger" name="button"><img src="{% static 'media/ham_menu.svg' %}" alt="Main Menu"></button>
   </header>
-  <nav>
+  <nav id="sideNav" class="closed">
     <a href="{% url 'create' %}">Create</a>
     <a href="{% url 'edit' pk=pk %}">Edit</a>
     <a href="{% url 'discuss' pk=pk %}">Discuss</a>

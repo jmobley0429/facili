@@ -1,11 +1,13 @@
 const formDivs = document.querySelectorAll("div.list-item.edit");
 const showDivs = document.querySelectorAll(".list-item");
-const editButton = document.querySelector("#editButton");
-const shareButton = document.querySelector("#shareButton");
-const editWarningSpan = document.querySelector("#editButton + span");
-const shareWarningSpan = document.querySelector("#shareButton+span");
-let selectedDisc;
+const editButton = document.querySelector("button#edit");
+const shareButton = document.querySelector("button#share");
+const addButton = document.querySelector("button#add");
+const warningSpan = document.querySelector("span.warning");
+const hamMenu = document.querySelector("#hamburger");
 
+// handle selecting showing of form/display mode on disc cards
+let selectedDisc;
 formDivs.forEach((item, i) => {
   item.classList.add("hidden");
 });
@@ -17,25 +19,33 @@ showDivs.forEach((div, i) => {
     editButton.setAttribute("value", selectedDisc);
   });
 });
+
 // edit button no item selected warning
-editButton.addEventListener("click", function() {
-  val = editButton.getAttribute("value");
-  if (val === null) {
-    editWarningSpan.classList.toggle("on");
-    setTimeout(() => {
-      editWarningSpan.classList.toggle("on");
-    }, 2000);
-  }
-});
+shareButton.addEventListener("click", toggleWarning);
+editButton.addEventListener("click", toggleWarning);
 
-// share button no item selected warning
-
-shareButton.addEventListener("click", function() {
-  val = editButton.getAttribute("value");
+function toggleWarning(e) {
+  msg = e.currentTarget.getAttribute("id");
+  button = e.currentTarget;
+  val = button.getAttribute("value");
+  id = button.getAttribute("value");
   if (val === null) {
-    shareWarningSpan.classList.toggle("on");
+    warningSpan.textContent = `Select a discussion to ${msg}!`;
+    warningSpan.classList.toggle("on");
     setTimeout(() => {
-      shareWarningSpan.classList.toggle("on");
-    }, 2000);
+      warningSpan.classList.toggle("on");
+    }, 3000);
   }
+}
+
+//ham menu button
+let sideNav = document.querySelector("nav");
+hamMenu.addEventListener("click", function(e) {
+  sideNav.classList.toggle("closed");
+  document.addEventListener("click", e => {
+    console.log(sideNav.contains(e.target));
+    if (!e.target.id == "sideNav" && !sideNav.contains(e.target)) {
+      sideNav.classList.toggle("closed");
+    }
+  });
 });
