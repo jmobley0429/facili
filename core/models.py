@@ -6,6 +6,9 @@ class Discussion(models.Model):
     description = models.TextField(max_length=2000)
     date_added = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["-date_added"]
+
 
 class Topic(models.Model):
     title = models.CharField(max_length=100)

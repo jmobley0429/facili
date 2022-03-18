@@ -27,7 +27,10 @@
        <form id="edit-discussion" class="" action="" method="post">
          {% csrf_token %}
         {{ edit_form }}
-         <button type="submit" form="edit-discussion" value="{{d.id}}" name="edit-discussion">Save Changes</button>
+         <div class="button-row">
+           <button type="submit" form="edit-discussion" value="{{d.id}}" name="edit-discussion">Save Changes</button>
+           <button type="button"  value="{{d.id}}" id="cancelEdit" name="cancel-edit">Cancel</button>
+         </div>
        </form>
      </div>
      {% endfor %}

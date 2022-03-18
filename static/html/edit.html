@@ -1,39 +1,67 @@
-{% extends "base_generic.html" %}
-{% load static %}
-{% block staticfiles %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
-<script type="text/javascript" src="{% static '/js/edit-bundle.js' %}"></script>
-{% endblock staticfiles %}
-{% block content %}
+{% extends "base_generic.html" %} {% load static %} {% block staticfiles %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+<script
+  defer
+  type="text/javascript"
+  src="{% static '/js-bundles/edit-bundle.js' %}"
+></script>
+{% endblock staticfiles %} {% block content %}
+<span class="warning"></span>
 <div class="scroll-list">
   <div class="header">
     <h2>Discussion: {{discussion.title}}</h2>
   </div>
   <div class="list-body">
     {% if not all_topics %}
-     <div class="list-item">
-       <h3>No topics yet.</h3>
-       <p>Click add to get started!</p>
-     </div>
-     {% else %}
-     {% for t in all_topics %}
-     <div class="list-item" value={{d.id}}>
-       <h3>{{t.title}}</h3>
-       <p>{{ t.description }}</p>
-     </div>
-     <div class="list-item edit" value="{{t.id}}">
-       <form id="edit-topic" class="" action="" method="post">
-         {% csrf_token %}
-         {{edit_form}}
-         <button type="submit" form="edit-topic" value="{{t.id}}" name="edit-topic">Save Changes</button>
-       </form>
-     </div>
-     {% endfor %}
-    {% endif %}
-    <div class="list-footer">
-      <button type="button" id="editButton" name="button"><img src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
-      <button type="button" id="addButton" name="button"><img src="{% static 'media/plus.svg' %}" alt="Edit"></button>
-      <button type="button" id="shareButton" name="button"><img src="{% static 'media/share.svg' %}" alt="Edit"></button>
+    <div class="list-item">
+      <h3>No topics yet.</h3>
+      <p>Click add to get started!</p>
+    </div>
+    {% else %} {% for t in all_topics %}
+    <div class="list-item" value="{{t.id}}">
+      <h3>{{t.title}}</h3>
+      <p>{{ t.description }}</p>
+    </div>
+    <div class="list-item edit" value="{{t.id}}">
+      <form id="edit-topic" class="" action="" method="post">
+        {% csrf_token %} {{ edit_form }}
+        <div class="button-row">
+          <button
+            type="submit"
+            form="edit-discussion"
+            value="{{d.id}}"
+            name="edit-discussion"
+          >
+            Save Changes
+          </button>
+          <button
+            type="button"
+            value="{{d.id}}"
+            id="cancelEdit"
+            name="cancel-edit"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+    {% endfor %} {% endif %}
+  </div>
+  <div class="list-footer">
+    <div class="button">
+      <button type="button" id="edit" name="button">
+        <img src="{% static 'media/pencil.svg' %}" alt="Edit" />
+      </button>
+    </div>
+    <div id="addButton" class="button">
+      <button type="button" id="add" name="button">
+        <img src="{% static 'media/plus.svg' %}" alt="Add" />
+      </button>
+    </div>
+    <div class="button">
+      <button type="button" id="share" name="button">
+        <img src="{% static 'media/share.svg' %}" alt="Share" />
+      </button>
     </div>
   </div>
 </div>
@@ -41,10 +69,16 @@
   <div class="header">
     <h2>Add New Topic</h2>
   </div>
-  <form id="add-topic"  action="" method="post">
-         {% csrf_token %}
-         {{ add_form }}
-         <button type="submit" form="add-topic" value="{{discussion.id}}" name="add-topic">Save Topic</button>
-       </form>
+  <form id="add-topic" action="" method="post">
+    {% csrf_token %} {{ add_form }}
+    <button
+      type="submit"
+      form="add-topic"
+      value="{{discussion.id}}"
+      name="add-topic"
+    >
+      Save Topic
+    </button>
+  </form>
 </div>
 {% endblock %}

@@ -53,7 +53,7 @@ def process_forms(
     # unpack all config objects
     conf = CONFIG[model]
     form = conf["form"]
-    url = conf["redirect_url_name"]
+    url_name = conf["redirect_url_name"]
     model_class = conf["model"]
     template = conf["template_name"]
 
@@ -65,11 +65,15 @@ def process_forms(
             return render(request, template, context)
         else:
             data = form_instance.cleaned_data
-            pk = data["pk"]
+            pk = request.POST[f"edit-{model}"]
             model_instance = model_class.objects.get(pk=pk)
             model_instance.title = data["title"]
             model_instance.description = data["description"]
             model_instance.save()
+            if model == "discussion":
+                url = reverse(url_name)
+            else:
+                url = reverse(url_name, args=[pk])
             return HttpResponseRedirect(url)
 
     # else POST is for add form
@@ -99,7 +103,7 @@ class CreateView(View):
         return render(request, self.template_name, context=context)
 
     def post(self, request, *args, **kwargs):
-        process_forms(request, model="discussion", context=self.context)
+        return process_forms(request, model="discussion", context=self.context)
 
 
 class EditView(View):
@@ -116,6 +120,7 @@ class EditView(View):
         return render(request, self.template_name, context=context)
 
     def post(self, request, pk, *args, **kwargs):
+
         process_forms(request, model="topic", context=self.context)
 
 
