@@ -8,12 +8,15 @@
   --primary-color-dark: #f57c00;
   --primary-color-darker: #da5c01;
   --primary-color: #ff9800;
-  --primary-color-light: #ffe0b2;
+  --primary-color-light: #ffc954;
+  --primary-color-lighter: #cfddfb;
   --primary-color-text: #212121;
   --accent-color: #ffd706;
+  --selected-color: #95eeee;
   --primary-text-color: #212121;
   --secondary-text-color: #757575;
   --divider-color: #bdbdbd;
+  --surface-bg: #f2f2f2;
   --shadow-color: rgba(10, 10, 10, 0.75);
 }
 /* global*********************************/
@@ -24,6 +27,7 @@ body {
   font-family: "Roboto", sans-serif;
   color: var(--primary-text-color);
   background-color: white;
+  overflow-y: hidden;
 }
 /* typography *****************************************/
 h1,
@@ -44,6 +48,11 @@ h2 {
   color: var(--text-color);
   margin: 0.5rem;
   margin-left: 1rem;
+}
+
+h3 {
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
 }
 /* sections divs form etc *****************************************/
 header {
@@ -82,10 +91,11 @@ nav {
   z-index: 1;
   width: auto;
   transition: 250ms;
+  margin-left: -60rem;
 }
 
-nav.closed {
-  margin-left: -60rem;
+nav.open {
+  margin-left: 0;
 }
 
 .scroll.list {
@@ -96,7 +106,71 @@ nav.closed {
 }
 
 .list-body {
+  max-height: 100vh;
   overflow-y: scroll;
+  background-color: inherit;
+  display: flex;
+  flex-flow: column;
+  gap: 0.6rem;
+  width: 93vw;
+  max-width: 700px;
+  padding: 0 0.5rem;
+}
+
+.list-item {
+  box-shadow: 0 3px 3px var(--shadow-color);
+  margin: 0 0.3rem;
+}
+
+.list-item,
+.list-item form {
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+  padding: 0.75em;
+  border-radius: 0.5rem;
+  background-color: inherit;
+  margin-bottom: 0.3rem;
+  overflow: hidden;
+  transition: 200ms;
+}
+
+.list-item.selected {
+  border: 4px solid var(--primary-color-light);
+  border-radius: inherit;
+  box-shadow: 0 3px 7px var(--shadow-color);
+  display: flex;
+  min-height: none;
+  overflow: visible;
+}
+.list-item.edit {
+}
+form > input,
+form > textarea {
+  font-size: 1.125em;
+  padding: 0.35em;
+  border-style: none;
+  box-shadow: 0 1px 3px var(--shadow-color);
+  border-radius: 0.2rem;
+  line-height: 1.35em;
+  margin-bottom: inherit;
+}
+
+form > label {
+  color: var(--primary-text-color);
+  font-weight: bold;
+  margin-bottom: inherit;
+}
+
+form > button {
+  color: white;
+  font-weight: bold;
+  margin-bottom: inherit;
+  background-color: var(--primary-color-dark);
+  align-self: center;
+  padding: 0.75em 1.75em;
+  border-radius: 50px;
+  box-shadow: 0 3px 4px var(--shadow-color);
 }
 
 .list-footer {
@@ -104,14 +178,15 @@ nav.closed {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  gap: 2rem;
+  gap: 3rem;
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   padding-top: 1rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 1rem;
 }
+
 div.button {
   margin: 0;
   padding: 0;
@@ -122,6 +197,13 @@ div.button {
 .modal-content {
   display: none;
 }
+
+textarea {
+  resize: none;
+  overflow-y: visible;
+  font-family: inherit;
+  max-height: none;
+}
 /* buttons + icons  *****************************************/
 button {
   background-color: transparent;
@@ -130,11 +212,24 @@ button {
 }
 
 button img {
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(307deg)
     brightness(103%) contrast(101%);
   pointer-events: inherit;
+}
+
+button#add {
+  background-color: var(--accent-color);
+  border-radius: 500px;
+  padding: 1.7em;
+  box-shadow: 0 5px 5px var(--shadow-color);
+  margin-top: -1.5rem;
+}
+button#add img {
+  width: 2em;
+  height: 2em;
+  filter: invert(5%);
 }
 
 nav a {
@@ -158,6 +253,7 @@ nav a:hover {
 
 /* scripting **********************************************/
 main {
+  background-color: var(--surface-bg);
   display: flex;
   flex-flow: column;
   justify-content: center;
