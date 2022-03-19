@@ -29,7 +29,7 @@ class TestDiscussion(TestCase):
         pk = 1
         disc = Discussion.objects.get(pk=pk)
         url = disc.get_absolute_url()
-        expected = f"/edit/{pk}/"
+        expected = f"/edit/{pk}"
         self.assertEqual(url, expected)
 
     def test_title_max_length(self):
