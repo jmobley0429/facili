@@ -7,14 +7,14 @@ CONFIG = {
     "discussion": {
         "model": models.Discussion,
         "form": forms.DiscussionForm,
-        "redirect_url_name": "create",
+        "redirect_url_name": "create-discussion",
         "template_name": "create.html",
         "fk_model": None,
     },
     "topic": {
         "model": models.Topic,
         "form": forms.TopicForm,
-        "redirect_url_name": "edit",
+        "redirect_url_name": "edit-discussion",
         "template_name": "edit.html",
         "fk_model": models.Discussion,
     },
@@ -50,6 +50,7 @@ def process_forms(
     model=None,
     context=None,
 ):
+
     # unpack all config objects
     conf = CONFIG[model]
     form = conf["form"]
@@ -59,17 +60,14 @@ def process_forms(
 
     # check for presence of edit form
     if f"edit-{model}" in request.POST:
+        pk = request.POST[f"edit-{model}"]
+        model_instance = model_class.objects.get(pk=pk)
         form_instance = form(request.POST)
         if not form_instance.is_valid():
             context["edit_form"] = form_instance
             return render(request, template, context)
         else:
-            data = form_instance.cleaned_data
-            pk = request.POST[f"edit-{model}"]
-            model_instance = model_class.objects.get(pk=pk)
-            model_instance.title = data["title"]
-            model_instance.description = data["description"]
-            model_instance.save()
+            form_instance.save()
             if model == "discussion":
                 url = reverse(url_name)
             else:
@@ -77,21 +75,35 @@ def process_forms(
             return HttpResponseRedirect(url)
 
     # else POST is for add form
-    elif f"add-{model}" in data:
+    elif f"add-{model}" in request.POST:
         form_instance = form(request.POST)
+        pk = request.POST[f"add-{model}"]
+        context["pk"] = pk
         if not form_instance.is_valid():
             context["add_form"] = form_instance
             return render(request, template, context)
         else:
             data = form_instance.cleaned_data
-            model_instance = model_class.objects.create(data)
-            model_instance.save()
+            title = data["title"]
+            description = data["description"]
+            print(model)
+            if model == "topic":
+                discussion = models.Discussion.objects.get(pk=pk)
+                model_instance = model_class.objects.create(
+                    title=title, description=description, discussion=discussion
+                )
+                url = reverse("create")
+            else:
+                model_instance = model_class.objects.create(
+                    title=title, description=description
+                )
+                url = reverse("create")
             return HttpResponseRedirect(url)
 
 
 class CreateView(View):
     template_name = "create.html"
-    context = {"custom_h1": "Create Discussions"}
+    context = {"custom_h1": "Create models.Discussion."}
 
     def get(self, request, *args, **kwargs):
         try:
@@ -113,15 +125,14 @@ class EditView(View):
     def get(self, request, *args, **kwargs):
         pk = self.kwargs["pk"]
         if pk == None:
-            pk = Discussion.objects.all()[0].id
+            pk = models.Discussion.objects.first().id
         self.context["pk"] = pk
         context = get_standard_context(self.context, "topic")
         context["discussion"] = models.Discussion.objects.get(pk=pk)
         return render(request, self.template_name, context=context)
 
     def post(self, request, pk, *args, **kwargs):
-
-        process_forms(request, model="topic", context=self.context)
+        return process_forms(request, model="topic", context=self.context)
 
 
 class DiscussView(View):
