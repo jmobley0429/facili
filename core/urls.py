@@ -9,6 +9,6 @@ urlpatterns = [
     path("share/<int:pk>", views.share, name="share-discussion"),
     path("discuss/", views.discuss, name="discuss"),
     path("discuss/<int:pk>", views.discuss, name="discuss-discussion"),
-    path("results/", views.review, name="results"),
-    path("results/<int:pk>/", views.review, name="results-discussion"),
+    path("results/", views.results, name="results"),
+    path("results/<int:pk>/", views.results, name="results-discussion"),
 ]

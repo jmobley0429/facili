@@ -3,8 +3,10 @@ from django.http import HttpResponseRedirect
 from django.views import View
 from .models import Discussion, Topic, FeedItem, Facilitator
 from .forms import DiscussionForm, TopicForm, FacilitatorForm
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def create(request):
     template_name = "create.html"
     context = {}
@@ -30,7 +32,7 @@ def create(request):
             form = DiscussionForm(request.POST)
             if not form.is_valid():
                 context["form"] = form
-                return render(reverse("create"), template_name, context=context)
+                return render(request, template_name, context=context)
             else:
                 form.save()
                 return HttpResponseRedirect(reverse("create"))
@@ -40,12 +42,13 @@ def create(request):
             form = DiscussionForm(request.POST)
             if not form.is_valid():
                 context["form"] = form
-                return HttpResponseRedirect(reverse("create"))
+                return render(request, template_name, context)
             else:
                 form.save()
                 return HttpResponseRedirect(reverse("create"))
 
 
+@login_required
 def edit(request, pk=None):
     if pk == None:
         pk = Discussion.objects.first().id
@@ -64,19 +67,13 @@ def edit(request, pk=None):
         if "add-topic" in request.POST:
             pk = request.POST["add-topic"]
             discussion = Discussion.objects.get(pk=pk)
-            form = TopicForm(request.POST)
+            topic = Topic(discussion=discussion)
+            form = TopicForm(request.POST, instance=topic)
             if not form.is_valid():
                 context["form"] = form
-                return HttpResponseRedirect(reverse("edit"))
+                return render(request, template_name, context)
             else:
-                title = form.cleaned_data["title"]
-                description = form.cleaned_data["description"]
-                topic = Topic.objects.create(
-                    title=title,
-                    description=description,
-                    discussion=discussion,
-                )
-
+                form.save()
                 return HttpResponseRedirect(reverse("edit-discussion", args=[pk]))
 
         else:
@@ -99,14 +96,13 @@ def share(request, pk):
     template_name = "share.html"
     context = {"custom_h1": "Share Discussion"}
     if request.method == "GET":
-        discussion = Discussion.objects.get(pk=pk)
-        fac = Facilitator(discussion=discussion)
-        form = FacilitatorForm(instance=fac)
+        form = FacilitatorForm()
         context["form"] = form
         return render(request, template_name, context)
-
     elif request.method == "POST":
-        form = FacilitatorForm(request.POST)
+        discussion = Discussion.objects.get(pk=pk)
+        facilitator = Facilitator(discussion=discussion)
+        form = FacilitatorForm(request.POST, instance=facilitator)
         if not form.is_valid():
             context["form"] = form
             return render(request, template_name, context)
@@ -117,14 +113,28 @@ def share(request, pk):
 
 def discuss(request, pk=None):
     template_name = "discuss.html"
+    context = {"custom_h1": "Start Discussion"}
     if pk == None:
-        pk = Discussion.objects.first().id
-    context = {
-        "custom_h1": "Start Discussion",
-        "pk": pk,
-    }
-    return render(request, template_name, context)
+        context["none-selected"] = True
+        return render(request, template_name, context)
+    if request.method == "GET":
+        discussion = Discussion.objects.get(pk=pk)
+        facilitators = discussion.facilitator_set.all()
+        topics = discussion.topic_set.all()
+        context["facilitators"] = facilitators
+        context["discussion"] = discussion
+        context["topics"] = topics
+        return render(request, template_name, context)
 
 
-def review(request):
-    return render(request, "review.html", {"custom_h1": "Review "})
+def results(request, pk=None):
+    template_name = "results.html"
+    context = {"custom_h1": "Review Discussion"}
+    if pk == None:
+        context["none-selected"] = True
+        return render(request, template_name, context)
+    if request.method == "GET":
+        discussion = Discussion.objects.get(pk=pk)
+        context["results"] = discussion.get_discussion_results()
+        context["discussion"] = discussion
+        return render(request, template_name, context)

@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 
 class Discussion(models.Model):
@@ -12,6 +14,11 @@ class Discussion(models.Model):
 
     class Meta:
         ordering = ["-date_added"]
+        # permissions = [
+        #     ("can_edit", "Can edit Discussions"),
+        #     ("can_add", "Can add Discussions"),
+        #     ("can_delete", "Can delete Discussions"),
+        # ]
 
     def get_absolute_url(self):
         return reverse("edit-discussion", args=[str(self.pk)])
@@ -38,10 +45,15 @@ class Topic(models.Model):
 
     class Meta:
         ordering = ["-date_added"]
+        # permissions = [
+        #     ("can_edit", "Can edit Topics"),
+        #     ("can_add", "Can add Topics"),
+        #     ("can_delete", "Can delete Topics"),
+        # ]
 
 
 class Facilitator(models.Model):
-    name = models.CharField(blank=True, null=True, max_length=50)
+    name = models.CharField(max_length=50)
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)
 
     class Meta:

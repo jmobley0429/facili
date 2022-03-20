@@ -1,13 +1,14 @@
+import unittest
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from core.models import Discussion, Topic, FeedItem, Facilitator
 from core.forms import DiscussionForm, TopicForm
-import unittest
 
 
-def create_database(n=3):
+def create_database(n=3, create_user=False):
     """
-    creates a test database. n is equal to the number of levels deep required for testing:
+    creates a test database. n = the number of levels deep required for testing:
     0 : just create one discussion
     1 : Discussion with topics
     2 : Discussion with topics and facilitator
@@ -38,6 +39,11 @@ def create_database(n=3):
             }
             feeditem = FeedItem(data)
             feeditem.save()
+    if create_user:
+        test_user = User.objects.create_user(
+            username="TestUser", password="aQ)vz3a^d5454"
+        )
+        test_user.save()
 
 
 class TestCreateView(TestCase):
@@ -48,15 +54,22 @@ class TestCreateView(TestCase):
     @classmethod
     def setUp(cls):
         for i in range(10):
-            create_database(n=0)
+            create_database(n=0, create_user=True)
+
+    def test_user_cannot_access_page_without_login(self):
+        url = "/create/"
+        response = self.client.get(url)
+        self.assertRedirects(response, f"/accounts/login/?next={url}")
 
     def test_view_exists_at_correct_url(self):
         url = "/create/"
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_get_request_context(self):
         url = f"/create/"
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         context = response.context
         self.assertEqual(response.status_code, 200)
@@ -70,12 +83,14 @@ class TestCreateView(TestCase):
 
     def test_view_can_be_called_by_name(self):
         url = reverse("create")
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     #
     def test_view_uses_correct_template(self):
         url = reverse("create")
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "create.html")
@@ -90,6 +105,7 @@ class TestCreateView(TestCase):
             "title": "A new title",
             "description": "A new desc",
         }
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 302)
         new_num_discussions = len(Discussion.objects.all())
@@ -104,8 +120,9 @@ class TestCreateView(TestCase):
         data = {
             "edit-discussion": str(pk),
             "title": "A new title",
-            "desc": "A new desc",
+            "description": "A new desc",
         }
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.post(url, data=data)
         edited_discussion = Discussion.objects.get(pk=pk)
         new_title = edited_discussion.title
@@ -119,26 +136,61 @@ class TestCreateView(TestCase):
             reverse("create"),
         )
 
+    def test_invalid_add_form_rejects_and_returns(self):
+        discussion = Discussion.objects.first()
+        pk = discussion.id
+        url = reverse("create")
+        data = {
+            "add-discussion": "",
+            "title": "",
+            "description": "",
+        }
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("form" in response.context)
+
+    def test_invalid_edit_form_rejects_and_returns(self):
+        discussion = Discussion.objects.first()
+        pk = discussion.id
+        url = reverse("create")
+        data = {
+            "edit-discussion": str(pk),
+            "title": "",
+            "description": "",
+        }
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("form" in response.context)
+
 
 #
 #
 class TestEditView(TestCase):
     @classmethod
     def setUp(cls):
-        create_database(n=1)
+        create_database(n=1, create_user=True)
 
     @property
     def discussion_id(self):
         return Discussion.objects.first().id
 
+    def test_user_cannot_access_page_without_login(self):
+        url = "/edit/"
+        response = self.client.get(url)
+        self.assertRedirects(response, f"/accounts/login/?next={url}")
+
     def test_default_view_exists_at_correct_url(self):
         url = f"/edit/"
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_get_request_context(self):
         pk = self.discussion_id
         url = f"/edit/{pk}"
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         context = response.context
         self.assertEqual(response.status_code, 200)
@@ -151,6 +203,7 @@ class TestEditView(TestCase):
     def test_post_request_context(self):
         pk = self.discussion_id
         url = f"/edit/{pk}"
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         context = response.context
         self.assertEqual(response.status_code, 200)
@@ -162,18 +215,21 @@ class TestEditView(TestCase):
     def test_edit_view_exists_at_correct_url(self):
         pk = self.discussion_id
         url = f"/edit/{pk}"
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_default_view_can_be_called_by_name(self):
         pk = self.discussion_id
         url = reverse("edit")
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
     def test_edit_view_can_be_called_by_name(self):
         pk = self.discussion_id
         url = reverse("edit-discussion", args=[str(pk)])
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -181,6 +237,7 @@ class TestEditView(TestCase):
     def test_view_uses_correct_template(self):
         pk = self.discussion_id
         url = reverse("edit-discussion", args=[pk])
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "edit.html")
@@ -195,6 +252,7 @@ class TestEditView(TestCase):
             "title": "A new title",
             "description": "A new desc",
         }
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 302)
         new_num_topics = len(Topic.objects.all())
@@ -214,6 +272,7 @@ class TestEditView(TestCase):
             "title": "A new title",
             "description": "A new desc",
         }
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
         response = self.client.post(url, data=data)
         edited_topic = Topic.objects.get(pk=pk)
         new_title = edited_topic.title
@@ -222,6 +281,36 @@ class TestEditView(TestCase):
         self.assertEqual(new_title, edited_topic.title)
         self.assertEqual(new_description, edited_topic.description)
         self.assertRedirects(response, reverse("edit-discussion", args=[parent_pk]))
+
+    def test_invalid_edit_topic_form_rejects_and_returns(self):
+        discussion = Discussion.objects.first()
+        topic_id = discussion.topic_set.first().id
+        pk = discussion.id
+        url = reverse("edit-discussion", args=[pk])
+        data = {
+            "edit-topic": str(topic_id),
+            "parent-discussion": discussion.id,
+            "title": "",
+            "description": "",
+        }
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("form" in response.context)
+
+    def test_invalid_add_topic_form_rejects_and_returns(self):
+        discussion = Discussion.objects.first()
+        pk = discussion.id
+        url = reverse("edit-discussion", args=[pk])
+        data = {
+            "add-topic": pk,
+            "title": "",
+            "description": "",
+        }
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("form" in response.context)
 
 
 class TestShareView(TestCase):
@@ -233,21 +322,18 @@ class TestShareView(TestCase):
     def discussion_id(self):
         return Discussion.objects.first().id
 
-    @unittest.skip("already failed")
     def test_share_view_exists_at_correct_url(self):
         pk = self.discussion_id
-        url = f"/share-discussion/{pk}"
+        url = f"/share/{pk}"
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    @unittest.skip("already failed")
     def test_share_view_can_be_called_by_name(self):
         pk = self.discussion_id
         url = reverse("share-discussion", args=[str(pk)])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    @unittest.skip("already failed")
     def test_view_uses_correct_template(self):
         pk = self.discussion_id
         url = reverse("share-discussion", args=[pk])
@@ -255,7 +341,6 @@ class TestShareView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "share.html")
 
-    @unittest.skip("already failed")
     def test_can_add_facilitator(self):
         pk = self.discussion_id
         url = reverse("share-discussion", args=[pk])
@@ -274,6 +359,15 @@ class TestShareView(TestCase):
         redirect_url = reverse("discuss-discussion", args=[pk])
         self.assertRedirects(response, redirect_url)
 
+    def test_invalid_facilitator_form_rejects_and_returns(self):
+        discussion = Discussion.objects.first()
+        pk = discussion.id
+        url = reverse("share-discussion", args=[pk])
+        data = {}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("form" in response.context)
+
 
 class TestDiscussView(TestCase):
     @classmethod
@@ -286,16 +380,16 @@ class TestDiscussView(TestCase):
 
     def test_discuss_view_exists_at_correct_url(self):
         pk = self.discussion_id
-        url = f"/discuss/"
+        url = f"/discuss/{pk}"
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_discuss_defult_view_can_be_called_by_name(self):
+    def test_discuss_default_view_can_be_called_by_name(self):
         url = reverse("discuss")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_discuss_defult_view_can_be_called_by_name(self):
+    def test_discuss_default_view_can_be_called_by_name(self):
         pk = self.discussion_id
         url = reverse("discuss-discussion", args=[str(pk)])
         response = self.client.get(url)
@@ -308,7 +402,8 @@ class TestDiscussView(TestCase):
         self.assertTemplateUsed(response, "discuss.html")
 
     def test_get_request_context(self):
-        url = reverse("discuss")
+        pk = self.discussion_id
+        url = reverse("discuss-discussion", args=[pk])
         response = self.client.get(url)
         context = response.context
         self.assertTrue("custom_h1" in context)
@@ -328,7 +423,7 @@ class TestResultsView(TestCase):
 
     def test_results_view_exists_at_correct_url(self):
         pk = self.discussion_id
-        url = f"/results/{pk}"
+        url = f"/results/{pk}/"
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
@@ -344,17 +439,16 @@ class TestResultsView(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
-        url = reverse("discuss")
+        url = reverse("results")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "discuss.html")
+        self.assertTemplateUsed(response, "results.html")
 
     def test_get_request_context(self):
-        url = reverse("discuss")
+        pk = self.discussion_id
+        url = reverse("results-discussion", args=[pk])
         response = self.client.get(url)
         context = response.context
         self.assertTrue("custom_h1" in context)
         self.assertTrue("discussion" in context)
-        self.assertTrue("facilitators" in context)
-        self.assertTrue("topics" in context)
         self.assertTrue("results" in context)
