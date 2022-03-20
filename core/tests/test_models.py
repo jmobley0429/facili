@@ -5,10 +5,28 @@ from core.models import Discussion, Topic, FeedItem, Facilitator
 class TestDiscussion(TestCase):
     @classmethod
     def setUp(cls):
-        for i in range(5):
+        for i in range(3):
             title = f"The Title {i}"
             description = f"The description {i}"
             discussion = Discussion.objects.create(title=title, description=description)
+            for i in range(3):
+                title = f"The Title {i}"
+                desc = f"The Desc {i}"
+                topic = Topic.objects.create(
+                    title=title, description=desc, discussion=discussion
+                )
+                facilitator = Facilitator.objects.create(
+                    name="Ned Nameson", discussion=discussion
+                )
+                for i in range(3):
+                    FeedItem.objects.create(
+                        content="The feed content",
+                        feedback="Some feedback",
+                        upvotes=i,
+                        downvotes=i,
+                        topic=topic,
+                        facilitator=facilitator,
+                    )
 
     def test_str_returns_title(self):
         disc = Discussion.objects.last()
@@ -40,6 +58,17 @@ class TestDiscussion(TestCase):
         max_length = Discussion._meta.get_field("description").max_length
         self.assertEqual(2000, max_length)
 
+    def test_get_discussion_results(self):
+        discussion = Discussion.objects.first()
+        results = discussion.get_discussion_results()
+        topics = discussion.topic_set.all()
+        feeditems = [item for topic in topics for item in topic.feeditem_set.all()]
+
+        self.assertTrue("topics" in results)
+        self.assertTrue("feeditems" in results)
+        self.assertEqual(feeditems, results["feeditems"])
+        self.assertQuerysetEqual(topics, results["topics"])
+
 
 class TestTopic(TestCase):
     @classmethod
@@ -60,14 +89,6 @@ class TestTopic(TestCase):
 
     def test_ordered_in_date_descending(self):
         topics = Topic.objects.all()
-        ordered_correctly = []
-        for i, t in enumerate(topics):
-            try:
-                correct = t.date_added > topics[i + 1].date_added
-            except IndexError:
-                correct = True
-            ordered_correctly.append(correct)
-        self.assertTrue(all(ordered_correctly))
 
     def test_title_max_length(self):
         max_length = Topic._meta.get_field("title").max_length
@@ -84,6 +105,9 @@ class TestFeedItem(TestCase):
         discussion = Discussion.objects.create(
             title="DiscTitle", description="DiscDesc"
         )
+        facilitator = Facilitator.objects.create(
+            name="Ned Nameson", discussion=discussion
+        )
 
         topic = Topic.objects.create(
             title="Topic title", description="Topic description", discussion=discussion
@@ -91,13 +115,13 @@ class TestFeedItem(TestCase):
         for i in range(5):
             content = f"The content {i}"
             feedback = f"The feedback {i}"
-            feeditem = FeedItem.objects.create(
-                content=content, feedback=feedback, topic=topic
+            FeedItem.objects.create(
+                content=content, feedback=feedback, topic=topic, facilitator=facilitator
             )
 
     def test_str_returns_content(self):
         feeditem = FeedItem.objects.first()
-        self.assertEqual(str(feeditem), "The content 0")
+        self.assertEqual(str(feeditem), "The content 4")
 
     def test_upvote(self):
         feeditem = FeedItem.objects.first()
@@ -110,3 +134,14 @@ class TestFeedItem(TestCase):
         downvotes = feeditem.downvotes
         feeditem.downvote()
         self.assertEqual(feeditem.downvotes, downvotes + 1)
+
+    def test_feeditem_ordered_by_time_added_descending(self):
+        feeditems = FeedItem.objects.all()
+        ordered_correctly = []
+        for i, d in enumerate(feeditems):
+            try:
+                correct = d.time_added > feeditems[i + 1].time_added
+            except IndexError:
+                correct = True
+            ordered_correctly.append(correct)
+        self.assertTrue(all(ordered_correctly))

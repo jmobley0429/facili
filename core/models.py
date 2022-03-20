@@ -16,6 +16,15 @@ class Discussion(models.Model):
     def get_absolute_url(self):
         return reverse("edit-discussion", args=[str(self.pk)])
 
+    def get_discussion_results(self):
+        topics = self.topic_set.all()
+        feeditems = [item for topic in topics for item in topic.feeditem_set.all()]
+
+        return {
+            "topics": topics,
+            "feeditems": feeditems,
+        }
+
 
 class Topic(models.Model):
     title = models.CharField(max_length=100)
@@ -31,6 +40,17 @@ class Topic(models.Model):
         ordering = ["-date_added"]
 
 
+class Facilitator(models.Model):
+    name = models.CharField(blank=True, null=True, max_length=50)
+    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
 class FeedItem(models.Model):
     content = models.CharField(max_length=150)
     feedback = models.CharField(max_length=150)
@@ -38,6 +58,10 @@ class FeedItem(models.Model):
     upvotes = models.PositiveIntegerField(default=0, blank=True)
     downvotes = models.PositiveIntegerField(default=0, blank=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    facilitator = models.ForeignKey(Facilitator, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["-time_added"]
 
     def __str__(self):
         return self.content
@@ -47,11 +71,3 @@ class FeedItem(models.Model):
 
     def downvote(self):
         self.downvotes += 1
-
-
-class Facilitator(models.Model):
-    name = models.CharField(max_length=50)
-    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name

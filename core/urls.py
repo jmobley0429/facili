@@ -6,6 +6,9 @@ urlpatterns = [
     path("create/", views.create, name="create"),
     path("edit/", views.edit, name="edit"),
     path("edit/<int:pk>", views.edit, name="edit-discussion"),
+    path("share/<int:pk>", views.share, name="share-discussion"),
     path("discuss/", views.discuss, name="discuss"),
-    path("review/", views.review, name="review"),
+    path("discuss/<int:pk>", views.discuss, name="discuss-discussion"),
+    path("results/", views.review, name="results"),
+    path("results/<int:pk>/", views.review, name="results-discussion"),
 ]

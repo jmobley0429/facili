@@ -1,5 +1,5 @@
 from django import forms
-from .models import *
+from .models import Discussion, Topic, FeedItem, Facilitator
 
 
 class DiscussionForm(forms.ModelForm):
@@ -12,3 +12,9 @@ class TopicForm(forms.ModelForm):
     class Meta:
         model = Topic
         fields = ["title", "description"]
+
+
+class FacilitatorForm(forms.ModelForm):
+    class Meta:
+        model = Facilitator
+        fields = ["name"]
