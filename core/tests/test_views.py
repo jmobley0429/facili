@@ -74,12 +74,8 @@ class TestCreateView(TestCase):
         context = response.context
         self.assertEqual(response.status_code, 200)
         self.assertTrue("custom_h1" in context)
-        self.assertTrue("all_discussions" in context)
-        self.assertTrue("edit_forms" in context)
-        self.assertTrue("ids" in context)
+        self.assertTrue("discussion_zip" in context)
         self.assertEqual(context["custom_h1"], "Create Discussion")
-        all_discussions = Discussion.objects.all()
-        self.assertQuerysetEqual(context["all_discussions"], all_discussions)
 
     def test_view_can_be_called_by_name(self):
         url = reverse("create")
@@ -131,10 +127,7 @@ class TestCreateView(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(new_title, edited_discussion.title)
         self.assertEqual(new_description, edited_discussion.description)
-        self.assertRedirects(
-            response,
-            reverse("create"),
-        )
+        self.assertRedirects(response, reverse("create"))
 
     def test_invalid_add_form_rejects_and_returns(self):
         discussion = Discussion.objects.first()
@@ -163,6 +156,23 @@ class TestCreateView(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)
         self.assertTrue("form" in response.context)
+
+    def test_odd_number_discussion_returns_list_with_edited_discussion(self):
+        all_discussions = Discussion.objects.all()
+        discussion = all_discussions[5]
+        self.client.force_login(User.objects.get_or_create(username="TestUser")[0])
+        pk = discussion.id
+        url = reverse("create")
+        data = {
+            "edit-discussion": str(pk),
+            "title": "A new edited title",
+            "description": "A new edited description",
+        }
+        response = self.client.post(url, data, follow=True)
+        new_all_discs = Discussion.objects.all()
+        context = response.context
+        response_new_discs = [c[0] for c in context["discussion_zip"]]
+        self.assertQuerysetEqual(new_all_discs, response_new_discs)
 
 
 #

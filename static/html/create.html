@@ -12,23 +12,23 @@
     <h2>My Discussions</h2>
   </div>
   <div class="list-body">
-    {% if not all_discussions %}
+    {% if not discussion_zip %}
      <div class="list-item">
        <h3>No discussions yet.</h3>
        <p>Click add to get started!</p>
      </div>
      {% else %}
-     {% for d in all_discussions %}
+     {% for d, f in discussion_zip %}
      <div class="list-item" value={{d.id}}>
        <h3>{{d.title}}</h3>
        <p>{{ d.description }}</p>
      </div>
-     <div class="list-item edit" value="{{d.id}}">
-       <form id="edit-discussion" class="" action="" method="post">
+     <div class="list-item edit hidden" value="{{d.id}}">
+       <form id="edit-discussion-{{d.id}}" class="" action="" method="post">
          {% csrf_token %}
-        {{ edit_form }}
+         {{f}}
          <div class="button-row">
-           <button type="submit" form="edit-discussion" value="{{d.id}}" name="edit-discussion">Save Changes</button>
+           <button type="submit" form="edit-discussion-{{d.id}}" value="{{d.id}}" name="edit-discussion">Save Changes</button>
            <button type="button"  value="{{d.id}}" id="cancelEdit" name="cancel-edit">Cancel</button>
          </div>
        </form>

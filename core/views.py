@@ -16,15 +16,10 @@ def create(request):
     if request.method == "GET":
         all_discussions = Discussion.objects.all()
         edit_forms = []
-        ids = []
         for disc in all_discussions:
-            form = DiscussionForm(instance=disc)
+            form = DiscussionForm()
             edit_forms.append(form)
-            ids.append(disc.id)
-
-        context["all_discussions"] = all_discussions
-        context["edit_forms"] = edit_forms
-        context["ids"] = ids
+        context["discussion_zip"] = list(zip(all_discussions, edit_forms))
         return render(request, template_name, context)
 
     elif request.method == "POST":
@@ -39,12 +34,21 @@ def create(request):
 
         else:
             pk = request.POST["edit-discussion"]
+            print("initial POST: ", request.POST)
+            discussion = Discussion.objects.get(pk=pk)
+            print("initial discussion: ", discussion)
             form = DiscussionForm(request.POST)
+            print("initial form: ", form)
             if not form.is_valid():
                 context["form"] = form
                 return render(request, template_name, context)
             else:
-                form.save()
+                data = form.cleaned_data
+                print("Cleaned data: ", data)
+                discussion.title = data["title"]
+                discussion.description = data["description"]
+                discussion.save(update_fields=["title", "description"])
+                print("Saved Discussion: ", discussion)
                 return HttpResponseRedirect(reverse("create"))
 
 

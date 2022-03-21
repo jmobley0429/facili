@@ -14,11 +14,11 @@ class Discussion(models.Model):
 
     class Meta:
         ordering = ["-date_added"]
-        # permissions = [
-        #     ("can_edit", "Can edit Discussions"),
-        #     ("can_add", "Can add Discussions"),
-        #     ("can_delete", "Can delete Discussions"),
-        # ]
+        permissions = [
+            ("can_edit", "Can edit Discussions"),
+            ("can_add", "Can add Discussions"),
+            ("can_delete", "Can delete Discussions"),
+        ]
 
     def get_absolute_url(self):
         return reverse("edit-discussion", args=[str(self.pk)])
@@ -45,11 +45,11 @@ class Topic(models.Model):
 
     class Meta:
         ordering = ["-date_added"]
-        # permissions = [
-        #     ("can_edit", "Can edit Topics"),
-        #     ("can_add", "Can add Topics"),
-        #     ("can_delete", "Can delete Topics"),
-        # ]
+        permissions = [
+            ("can_edit", "Can edit Topics"),
+            ("can_add", "Can add Topics"),
+            ("can_delete", "Can delete Topics"),
+        ]
 
 
 class Facilitator(models.Model):

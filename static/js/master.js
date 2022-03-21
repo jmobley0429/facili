@@ -1,6 +1,7 @@
 import { multiToggle } from "./utils.js";
 
 let selectedDiv;
+
 const formDivs = document.querySelectorAll("div.list-item.edit");
 const showDivs = document.querySelectorAll(".list-item");
 const editButton = document.querySelector("button#edit");
@@ -12,7 +13,6 @@ const hamMenu = document.querySelector("#hamburger");
 function hideForms() {
   formDivs.forEach((form, i) => {
     form.addEventListener("keydown", editItemFormSubmit);
-    form.classList.add("hidden");
     let div = showDivs[i];
     div.addEventListener("click", selectDiv);
   });
@@ -20,12 +20,12 @@ function hideForms() {
 
 function setFormContent() {
   formDivs.forEach((form, i) => {
-    let descSel = '.list-item.edit form > textarea[name="description"]';
-    let titleSel = '.list-item.edit form > input[name="title"]';
-    let descInputs = document.querySelectorAll(descSel);
-    let titleInputs = document.querySelectorAll(titleSel);
-    let titles = document.querySelectorAll("div.list-item > h3");
-    let descs = document.querySelectorAll("div.list-item > p");
+    var descSel = '.list-item.edit form > textarea[name="description"]';
+    var titleSel = '.list-item.edit form > input[name="title"]';
+    var descInputs = document.querySelectorAll(descSel);
+    var titleInputs = document.querySelectorAll(titleSel);
+    var titles = document.querySelectorAll("div.list-item > h3");
+    var descs = document.querySelectorAll("div.list-item > p");
 
     titleInputs[i].value = titles[i].textContent;
     descInputs[i].value = descs[i].textContent;

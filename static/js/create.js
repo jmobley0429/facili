@@ -1,8 +1,9 @@
 import { initPage } from "./master.js";
 
-document.addEventListener("readystatechange", e => {
+document.addEventListener("readystatechange", function(e) {
   initPage("discussion");
 });
+
 // const formDivs = document.querySelectorAll("div.list-item.edit");
 // const showDivs = document.querySelectorAll(".list-item");
 // const editButton = document.querySelector("button#edit");
@@ -10,11 +11,11 @@ document.addEventListener("readystatechange", e => {
 // const addButton = document.querySelector("button#add");
 // const warningSpan = document.querySelector("span.warning");
 // const hamMenu = document.querySelector("#hamburger");
-// let selectedDiv;
+// let selectedDisc;
 //
 // // handle selecting showing of form/display mode on disc cards
 // formDivs.forEach((form, i) => {
-//   form.addEventListener("keydown", editItemFormSubmit);
+//   form.addEventListener("keydown", editDiscussionFormSubmit);
 //   form.classList.add("hidden");
 //   let div = showDivs[i];
 //   div.addEventListener("click", selectDiv);
@@ -43,14 +44,14 @@ document.addEventListener("readystatechange", e => {
 //   } else {
 //     div.classList.add("selected");
 //   }
-//   selectedDiv = div.getAttribute("value");
-//   editButton.setAttribute("value", selectedDiv);
+//   selectedDisc = div.getAttribute("value");
+//   editButton.setAttribute("value", selectedDisc);
 // }
 //
 // // edit button no item selected warning
 // shareButton.addEventListener("click", toggleWarning);
 // editButton.addEventListener("click", toggleWarning);
-// editButton.addEventListener("click", toggleEditMode);
+// editButton.addEventListener("click", editDiscusssion);
 //
 // function toggleWarning(e) {
 //   msg = e.currentTarget.getAttribute("id");
@@ -66,9 +67,9 @@ document.addEventListener("readystatechange", e => {
 //   }
 // }
 //
-// function toggleEditMode(e) {
-//   var formSelector = `div.list-item.edit[value="${selectedDiv}"]`;
-//   var listItemSelector = `div.list-item[value="${selectedDiv}"]`;
+// function editDiscusssion(e) {
+//   var formSelector = `div.list-item.edit[value="${selectedDisc}"]`;
+//   var listItemSelector = `div.list-item[value="${selectedDisc}"]`;
 //   var title = document.querySelector(`${listItemSelector} h3`).textContent;
 //   var desc = document.querySelector(`${listItemSelector} p`).textContent;
 //   var showDiv = document.querySelector(listItemSelector);
@@ -88,7 +89,7 @@ document.addEventListener("readystatechange", e => {
 //   editDiscussion(e);
 // }
 //
-// function editItemFormSubmit(e) {
+// function editDiscussionFormSubmit(e) {
 //   if (e.keyCode == 13) {
 //     e.preventDefault();
 //     return false;
