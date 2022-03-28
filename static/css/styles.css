@@ -16,7 +16,7 @@
   --primary-text-color: #212121;
   --secondary-text-color: #757575;
   --divider-color: #bdbdbd;
-  --surface-bg: #f2f2f2;
+  --surface-bg: #f6f6f6;
   --shadow-color: rgba(10, 10, 10, 0.75);
 }
 /* global*********************************/
@@ -28,6 +28,11 @@ body {
   color: var(--primary-text-color);
   background-color: white;
   overflow-y: hidden;
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-flow: column;
 }
 /* typography *****************************************/
 h1,
@@ -59,6 +64,7 @@ header {
   background-color: var(--primary-color);
   padding: 1rem;
   display: flex;
+  flex: 0 1 auto;
   flex-flow: row;
   align-items: center;
   justify-content: space-between;
@@ -107,14 +113,14 @@ nav.open {
 
 .list-body {
   overflow-y: scroll;
-  max-height: 100vh;
-  background-color: inherit;
+  background-color: lightblue;
   display: flex;
   flex-flow: column;
   gap: 0.6rem;
   width: 93vw;
   max-width: 700px;
-  padding: 0 0.5rem;
+  padding: 0.75rem;
+  flex: 1 1 auto;
 }
 
 .list-item {
@@ -130,9 +136,9 @@ nav.open {
   align-items: stretch;
   padding: 0.75em;
   border-radius: 0.5rem;
-  background-color: inherit;
   max-height: 6rem;
   transition: 200ms;
+  background-color: white;
 }
 .list-item p {
   overflow: hidden;
@@ -187,9 +193,7 @@ div.button-row > button {
   align-items: flex-start;
   justify-content: center;
   gap: 3rem;
-  position: fixed;
-  bottom: 0;
-  left: 0;
+  flex: 0 1 auto;
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -267,9 +271,12 @@ main {
   background-color: var(--surface-bg);
   display: flex;
   flex-flow: column;
-  justify-content: center;
   align-items: center;
 }
+.content {
+  flex: 1 1 auto;
+}
+
 .hidden {
   display: none;
 }

@@ -13,8 +13,14 @@ const hamMenu = document.querySelector("#hamburger");
 function hideForms() {
   formDivs.forEach((form, i) => {
     form.addEventListener("keydown", editItemFormSubmit);
-    let div = showDivs[i];
-    div.addEventListener("click", selectDiv);
+  });
+}
+
+function addDivSelect() {
+  showDivs.forEach((div, i) => {
+    if (!div.classList.contains("edit")) {
+      div.addEventListener("click", selectDiv);
+    }
   });
 }
 
@@ -110,6 +116,7 @@ export function initPage(pagetype) {
     shareButton.addEventListener("click", toggleWarning);
   }
   hideForms();
+  addDivSelect();
   handleSideNav();
   setFormContent();
   editButton.addEventListener("click", e => {

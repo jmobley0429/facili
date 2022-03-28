@@ -6,6 +6,7 @@
 
 {% endblock staticfiles %}
 {% block content %}
+<div class="content">
 <span class="warning"></span>
 <div class="scroll-list">
   <div class="header">
@@ -35,19 +36,19 @@
      </div>
      {% endfor %}
     {% endif %}
-
   </div>
-  <div class="list-footer">
-    <div class="button">
+</div>
+</div>  
+<div class="list-footer">
+  <div class="button">
 
-      <button type="button" id="edit" name="button"><img src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
-    </div>
-    <div id="addButton" class="button">
-      <button type="button" id="add" name="button"><img src="{% static 'media/plus.svg' %}" alt="Add"></button>
-    </div>
-    <div class="button">
-      <button type="button" id="share" name="button"><img src="{% static 'media/share.svg' %}" alt="Share"></button>
-    </div>
+    <button type="button" id="edit" name="button"><img src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
+  </div>
+  <div id="addButton" class="button">
+    <button type="button" id="add" name="button"><img src="{% static 'media/plus.svg' %}" alt="Add"></button>
+  </div>
+  <div class="button">
+    <button type="button" id="share" name="button"><img src="{% static 'media/share.svg' %}" alt="Share"></button>
   </div>
 </div>
 <div class="modal-content">

@@ -1,0 +1,12 @@
+node_modules/
+*.slite3
+__init__.py
+__pycache__/
+*.pyc
+create/
+manage.py
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover

@@ -34,21 +34,21 @@ def create(request):
 
         else:
             pk = request.POST["edit-discussion"]
-            print("initial POST: ", request.POST)
+            ("initial POST: ", request.POST)
             discussion = Discussion.objects.get(pk=pk)
-            print("initial discussion: ", discussion)
+            ("initial discussion: ", discussion)
             form = DiscussionForm(request.POST)
-            print("initial form: ", form)
+            ("initial form: ", form)
             if not form.is_valid():
                 context["form"] = form
                 return render(request, template_name, context)
             else:
                 data = form.cleaned_data
-                print("Cleaned data: ", data)
+                ("Cleaned data: ", data)
                 discussion.title = data["title"]
                 discussion.description = data["description"]
                 discussion.save(update_fields=["title", "description"])
-                print("Saved Discussion: ", discussion)
+                ("Saved Discussion: ", discussion)
                 return HttpResponseRedirect(reverse("create"))
 
 

@@ -1,0 +1,29 @@
+1648470778979	geckodriver	INFO	Listening on 127.0.0.1:60775
+1648470778985	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "40703" "-no-remote" "-profile" "/tmp/rust_mozprofileizJ4Kl"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1648470779919	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileizJ4Kl/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:40703/devtools/browser/1b6f29b8-05f3-45f1-83ff-8db7b1b3430c
+1648470782214	Marionette	INFO	Listening on port 35215
+1648470782323	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1648470787549	Marionette	INFO	Stopped listening on port 35215
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1648470870554	geckodriver	INFO	Listening on 127.0.0.1:52899
+1648470870561	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "--remote-debugging-port" "54769" "-no-remote" "-profile" "/tmp/rust_mozprofileUj7oHE"
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+ATTENTION: default value of option mesa_glthread overridden by environment.
+1648470871326	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileUj7oHE/search.json.mozlz4", (void 0)))
+DevTools listening on ws://localhost:54769/devtools/browser/79609f59-b065-48a7-8d0e-a95be80c4eba
+1648470873552	Marionette	INFO	Listening on port 46373
+1648470873594	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1648470877815	Marionette	INFO	Stopped listening on port 46373
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
