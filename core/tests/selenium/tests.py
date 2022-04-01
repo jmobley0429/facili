@@ -34,7 +34,6 @@ class CreatePage(TestGeneric):
     locs = GenericLocators
 
     def test_add_discussion(self):
-
         po = self.page_obj
         po.get(make_url("create"))
         num = random.randint(0, 500)

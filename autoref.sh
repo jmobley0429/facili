@@ -1,5 +1,4 @@
 #!/bin/bash
-
 CURRENT_WID=$(xdotool getwindowfocus)
 
 WID=$(xdotool search --name "Mozilla Firefox")

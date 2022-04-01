@@ -104,11 +104,12 @@ nav.open {
   margin-left: 0;
 }
 
-.scroll.list {
+.scroll-list {
   display: flex;
   flex-flow: column;
   align-items: center;
   justify-content: flex-start;
+  height: 100%;
 }
 
 .list-body {
@@ -121,6 +122,7 @@ nav.open {
   max-width: 700px;
   padding: 0.75rem;
   flex: 1 1 auto;
+  padding-bottom: 10rem;
 }
 
 .list-item {
@@ -197,6 +199,10 @@ div.button-row > button {
   width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  width: 100vw;
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
 
 div.button {
@@ -209,8 +215,54 @@ div.button {
   flex-flow: row;
 }
 
+.modal-bg {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(11, 11, 11, 0.45);
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+}
+.modal-content,
+.modal-content form {
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+  justify-content: center;
+  background-color: white;
+}
 .modal-content {
-  display: none;
+  position: relative;
+  border-radius: 0.5rem;
+}
+
+.modal-content .header {
+  top: 0;
+  left: 0;
+  color: white;
+  padding: 1em;
+  width: 100%;
+  background-color: var(--primary-color-dark);
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+.modal-content form {
+  padding: 2rem;
+  border-radius: inherit;
+  padding: 2rem;
+}
+form label {
+  margin-bottom: 0.5rem;
+}
+
+.modal-content form input,
+.modal-content form textarea {
+  margin-bottom: 2rem;
 }
 
 textarea {
@@ -218,6 +270,16 @@ textarea {
   overflow-y: visible;
   font-family: inherit;
   max-height: none;
+}
+
+form button {
+  align-self: center;
+  background-color: var(--primary-color-darker);
+  padding: 1em 2em;
+  border-radius: 50px;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
 }
 /* buttons + icons  *****************************************/
 button {
@@ -272,9 +334,13 @@ main {
   display: flex;
   flex-flow: column;
   align-items: center;
+  height: 100%;
 }
 .content {
   flex: 1 1 auto;
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .hidden {

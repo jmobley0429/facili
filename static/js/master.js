@@ -9,6 +9,7 @@ const shareButton = document.querySelector("button#share");
 const addButton = document.querySelector("button#add");
 const warningSpan = document.querySelector("span.warning");
 const hamMenu = document.querySelector("#hamburger");
+const cancelEditButtons = document.querySelectorAll("#cancelEdit");
 
 function hideForms() {
   formDivs.forEach((form, i) => {
@@ -76,11 +77,6 @@ function toggleEditMode(e) {
   var cls = ["hidden", "selected"];
   multiToggle(showDiv, cls);
   multiToggle(formDiv, cls);
-  showDiv.removeEventListener("click", selectDiv);
-  formDiv.removeEventListener("click", selectDiv);
-  form.addEventListener("click", e => {
-    e.stopPropagation();
-  });
 }
 
 function cancelEdit(e) {
@@ -115,6 +111,10 @@ export function initPage(pagetype) {
   if (pagetype == "discussion") {
     shareButton.addEventListener("click", toggleWarning);
   }
+  cancelEditButtons.forEach((btn, i) => {
+    btn.addEventListener("click", toggleEditMode);
+  });
+
   hideForms();
   addDivSelect();
   handleSideNav();
