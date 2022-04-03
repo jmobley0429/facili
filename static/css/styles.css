@@ -10,14 +10,14 @@
   --primary-color: #ff9800;
   --primary-color-light: #ffc954;
   --primary-color-lighter: #cfddfb;
-  --primary-color-text: #212121;
+  --primary-color-text: #181818;
   --accent-color: #ffd706;
   --selected-color: #95eeee;
-  --primary-text-color: #212121;
   --secondary-text-color: #757575;
   --divider-color: #bdbdbd;
   --surface-bg: #f6f6f6;
   --shadow-color: rgba(10, 10, 10, 0.75);
+  --header-height: 6.5rem;
 }
 /* global*********************************/
 html,
@@ -25,7 +25,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Roboto", sans-serif;
-  color: var(--primary-text-color);
+  color: var(--primary-color-text);
   background-color: white;
   overflow-y: hidden;
   height: 100%;
@@ -70,6 +70,11 @@ header {
   justify-content: space-between;
   padding-top: 2rem;
   box-shadow: 0 2px 5px var(--shadow-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
 }
 header::before {
   width: 100%;
@@ -112,9 +117,28 @@ nav.open {
   height: 100%;
 }
 
+.scroll-list div.header {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+div.header select {
+  border-style: none;
+  padding: 0.5em;
+  font-size: 1em;
+  background-color: white;
+  box-shadow: 0 3px 4px gray;
+}
+div.header select .option {
+  padding: 0.5em;
+  font-size: 1em;
+  background-color: white;
+}
+
 .list-body {
   overflow-y: scroll;
-  background-color: lightblue;
   display: flex;
   flex-flow: column;
   gap: 0.6rem;
@@ -123,12 +147,16 @@ nav.open {
   padding: 0.75rem;
   flex: 1 1 auto;
   padding-bottom: 10rem;
+  border: 1px solid #cdcdcd;
+  border-radius: 0.4rem;
+  box-shadow: 0 0 7px #dddddd;
 }
 
 .list-item {
   box-shadow: 0 3px 3px var(--shadow-color);
   margin: 0 0.3rem;
   text-overflow: clip;
+  scroll-margin-top: 1rem;
 }
 
 .list-item,
@@ -138,9 +166,14 @@ nav.open {
   align-items: stretch;
   padding: 0.75em;
   border-radius: 0.5rem;
-  max-height: 6rem;
   transition: 200ms;
   background-color: white;
+}
+
+.list-item .edit .selected {
+  max-height: 65%;
+  scroll-padding: 2rem;
+  scroll-margin: 3rem;
 }
 .list-item p {
   overflow: hidden;
@@ -161,21 +194,27 @@ nav.open {
   max-height: 100vh;
 }
 
+.button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
 form > input,
 form > textarea {
-  font-size: 1.125em;
+  font-size: 1em;
   padding: 0.35em;
   border-style: none;
   box-shadow: 0 1px 3px var(--shadow-color);
   border-radius: 0.2rem;
-  line-height: 1.35em;
+  line-height: 1.1em;
   margin-bottom: inherit;
 }
 
 form > label {
-  color: var(--primary-text-color);
+  color: var(--primary-color-text);
   font-weight: bold;
-  margin-bottom: inherit;
+  margin-bottom: 0.25rem;
 }
 
 div.button-row > button {
@@ -211,9 +250,6 @@ div.button {
   display: flex;
   flex-flow: column;
 }
-.button-row {
-  flex-flow: row;
-}
 
 .modal-bg {
   display: flex;
@@ -235,10 +271,12 @@ div.button {
   align-items: stretch;
   justify-content: center;
   background-color: white;
+  box-shadow: 0 0 5px var(--shadow-color);
 }
 .modal-content {
   position: relative;
   border-radius: 0.5rem;
+  max-width: 95vw;
 }
 
 .modal-content .header {
@@ -250,14 +288,52 @@ div.button {
   background-color: var(--primary-color-dark);
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1;
+  box-shadow: 0 2px 3px gray;
+}
+
+.facilitator form {
+  box-shadow: 0 0 3px #eeeeee;
+  border-radius: 0.25rem;
+}
+
+.modal-content .header > div {
+  background-color: white;
+  color: white;
+  clip-path: polygon(
+    20% 0%,
+    0% 20%,
+    30% 50%,
+    0% 80%,
+    20% 100%,
+    50% 70%,
+    80% 100%,
+    100% 80%,
+    70% 50%,
+    100% 20%,
+    80% 0%,
+    50% 30%
+  );
+  margin-right: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  user-select: none;
+  transition: 100ms;
+}
+
+.modal-content .header > div:hover,
+.modal-content .header > div:focus {
+  transform: scale(1.2);
+  cursor: pointer;
 }
 .modal-content form {
   padding: 2rem;
-  border-radius: inherit;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
   padding: 2rem;
-}
-form label {
-  margin-bottom: 0.5rem;
 }
 
 .modal-content form input,
@@ -272,15 +348,15 @@ textarea {
   max-height: none;
 }
 
-form button {
-  align-self: center;
-  background-color: var(--primary-color-darker);
-  padding: 1em 2em;
-  border-radius: 50px;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
+.share-content {
+  display: flex;
+  padding: 2rem;
 }
+
+.share-content span {
+  word-wrap: normal;
+}
+
 /* buttons + icons  *****************************************/
 button {
   background-color: transparent;
@@ -295,8 +371,7 @@ button img {
     brightness(103%) contrast(101%);
   pointer-events: inherit;
 }
-
-button#add {
+form button#add {
   background-color: var(--accent-color);
   border-radius: 500px;
   padding: 1.7em;
@@ -307,6 +382,9 @@ button#add img {
   width: 2em;
   height: 2em;
   filter: invert(5%);
+}
+.button-row button {
+  min-width: 6rem;
 }
 
 nav a {
@@ -325,7 +403,33 @@ nav a:hover {
 }
 
 #addButton {
-  margin-top: -1rem;
+  margin-top: -2.5rem;
+  background-color: var(--accent-color);
+  padding: 1rem;
+  border-radius: 50px;
+  box-shadow: 0 3px 4px var(--shadow-color);
+  transition: 100ms;
+}
+
+#addButton:hover,
+#addButton:focus {
+  transform: translateY(-0.2rem);
+}
+
+.share-content button img {
+  filter: invert(53%) sepia(30%) saturate(5460%) hue-rotate(7deg)
+    brightness(101%) contrast(103%);
+}
+
+form button {
+  align-self: center;
+  background-color: var(--primary-color-darker);
+  padding: 0.6em 1.8em;
+  border-radius: 50px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 2px 3px gray;
 }
 
 /* scripting **********************************************/
@@ -335,6 +439,7 @@ main {
   flex-flow: column;
   align-items: center;
   height: 100%;
+  padding-top: var(--header-height);
 }
 .content {
   flex: 1 1 auto;

@@ -31,7 +31,7 @@
          {% csrf_token %}
          {{f}}
          <div class="button-row">
-           <button type="submit" form="edit-discussion-{{d.id}}" value="{{d.id}}" name="edit-discussion">Save Changes</button>
+           <button type="submit" form="edit-discussion-{{d.id}}" value="{{d.id}}" name="edit-discussion">Save</button>
            <button type="button"  value="{{d.id}}" id="cancelEdit" name="cancel-edit">Cancel</button>
          </div>
        </form>
@@ -43,19 +43,20 @@
 <div class="list-footer">
   <div class="button">
 
-    <button type="button" id="edit" name="button"><img src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
+    <button type="button" id="edit" name="button"><img draggable="false" src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
   </div>
   <div id="addButton" class="button">
-    <button type="button" id="add" name="button"><img src="{% static 'media/plus.svg' %}" alt="Add"></button>
+    <button type="button" id="add" name="button"><img draggable="false" src="{% static 'media/plus.svg' %}" alt="Add"></button>
   </div>
   <div class="button">
-    <button type="button" id="share" name="button"><img src="{% static 'media/share.svg' %}" alt="Share"></button>
+    <button type="button" id="share" name="button"><img draggable="false" src="{% static 'media/share.svg' %}" alt="Share"></button>
   </div>
 </div>
-<div class="modal-bg hidden">
+<div id="addModal" class="modal-bg hidden">
 <div class="modal-content">
   <div class="header">
     <h2>New Discussion</h2>
+    <div id="exitEdit">""</div>
   </div>
   <form id="add-discussion"  action="" method="post">
          {% csrf_token %}
@@ -63,5 +64,24 @@
          <button type="submit" form="add-discussion" name="add-discussion">Save Discussion</button>
        </form>
      </div>
+</div>
+<div id="shareModal" class="modal-bg hidden">
+<div class="modal-content">
+  <div class="header">
+    <h2>Share Discussion</h2>
+    <div id="exitShare">""</div>
+  </div>
+  <div class="share-content">
+  <span id="shareLink"></span>
+    <button
+      id="copyLink"
+      type="button"
+      name="share-link"
+    >
+      <img src="{% static 'media/copy.svg' %}" alt="Copy">
+    </button>
+  </div>
+
+</div>
 </div>
 {% endblock %}

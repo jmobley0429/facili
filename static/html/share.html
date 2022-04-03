@@ -1,11 +1,15 @@
 {% extends "base_generic.html" %}
 {% load static %}
 {% block staticfiles %}
-
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% endblock staticfiles %}
 {% block content %}
 <h2>Add Facilitator</h2>
-<form class="" action="" method="post">
-    {{ form }}
-</form>
+<div class="modal-content facilitator">
+  <form id="add-facilitator" action="" method="post">
+    {% csrf_token %}
+      {{ form }}
+      <button type="submit" form="add-facilitator" name="button">Add Facilitator</button>
+  </form>
+</div>
 {% endblock %}

@@ -21,7 +21,7 @@ class TestGeneric(unittest.TestCase):
     def setUp(cls):
         locs = LoginPageLocators
         options = webdriver.FirefoxOptions()
-        # options.headless = True
+        options.headless = True
         driver = webdriver.Firefox(options=options)
         cls.page_obj = BasePage(driver)
         cls.page_obj.get(make_url("accounts/login"))

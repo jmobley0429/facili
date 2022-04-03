@@ -10,6 +10,9 @@ const addButton = document.querySelector("button#add");
 const warningSpan = document.querySelector("span.warning");
 const hamMenu = document.querySelector("#hamburger");
 const cancelEditButtons = document.querySelectorAll("#cancelEdit");
+const exitAddModalButton = document.querySelector("#exitEdit");
+const exitButton = document.querySelector("#exitShare");
+let copyButton = document.querySelector("#copyLink");
 
 function hideForms() {
   formDivs.forEach((form, i) => {
@@ -42,6 +45,8 @@ function setFormContent() {
 function selectDiv(e) {
   let div = e.currentTarget;
   var isSelected = div.classList.contains("selected");
+  var baseUrl = window.location.origin;
+  var shareSpan = document.querySelector("#shareLink");
   showDivs.forEach((item, i) => {
     item.classList.remove("selected");
   });
@@ -51,16 +56,25 @@ function selectDiv(e) {
     div.classList.add("selected");
   }
   selectedDiv = div.getAttribute("value");
+  shareSpan.textContent = `${baseUrl}/share/${selectedDiv}`;
   editButton.setAttribute("value", selectedDiv);
 }
 
-function toggleWarning(e, pagetype) {
+function toggleWarning(e, pageType) {
+  if (pageType == "share") {
+    warningSpan.textContent = `Copied!`;
+    warningSpan.classList.toggle("on");
+    setTimeout(() => {
+      warningSpan.classList.toggle("on");
+    }, 3000);
+    return;
+  }
   var msg = e.currentTarget.getAttribute("id");
   var button = e.currentTarget;
   var val = button.getAttribute("value");
   var id = button.getAttribute("value");
   if (val === null) {
-    warningSpan.textContent = `Select a ${pagetype} to ${msg}!`;
+    warningSpan.textContent = `Select a ${pageType} to ${msg}!`;
     warningSpan.classList.toggle("on");
     setTimeout(() => {
       warningSpan.classList.toggle("on");
@@ -68,25 +82,32 @@ function toggleWarning(e, pagetype) {
   }
 }
 
-function toggleEditMode(e) {
-  var formSelector = `div.list-item.edit[value="${selectedDiv}"]`;
-  var listItemSelector = `div.list-item[value="${selectedDiv}"]`;
-  var showDiv = document.querySelector(listItemSelector);
-  var formDiv = document.querySelector(formSelector);
-  var form = document.querySelector(`${formSelector} > form`);
-  var cls = ["hidden", "selected"];
-  multiToggle(showDiv, cls);
-  multiToggle(formDiv, cls);
-}
-
-function cancelEdit(e) {
-  editDiscussion(e);
+function toggleEditMode(e, pageType) {
+  if (selectedDiv == undefined) {
+    toggleWarning(e, pageType);
+  } else {
+    var formSelector = `div.list-item.edit[value="${selectedDiv}"]`;
+    var listItemSelector = `div.list-item[value="${selectedDiv}"]`;
+    var showDiv = document.querySelector(listItemSelector);
+    var formDiv = document.querySelector(formSelector);
+    var form = document.querySelector(`${formSelector} > form`);
+    var cls = ["hidden", "selected"];
+    multiToggle(showDiv, cls);
+    multiToggle(formDiv, cls);
+    formDiv.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "start"
+    });
+  }
 }
 
 function editItemFormSubmit(e) {
   if (e.keyCode == 13) {
     e.preventDefault();
-    return false;
+    let textArea = e.target;
+    let currentText = textArea.value + "\n";
+    textArea.value = currentText;
   }
 }
 
@@ -107,20 +128,57 @@ function handleSideNav() {
   }
 }
 
-export function initPage(pagetype) {
-  if (pagetype == "discussion") {
-    shareButton.addEventListener("click", toggleWarning);
+function toggleShare(e, pageType) {
+  if (selectedDiv == undefined) {
+    toggleWarning(e, pageType);
+  } else {
+    createShareModal(e);
   }
+}
+
+function createShareModal() {
+  let shareModal = document.querySelector("#shareModal");
+  shareModal.classList.toggle("hidden");
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text);
+}
+
+function openModal(e) {
+  let modal = document.querySelector(".modal-bg");
+  modal.classList.toggle("hidden");
+}
+
+export function initPage(pageType) {
   cancelEditButtons.forEach((btn, i) => {
     btn.addEventListener("click", toggleEditMode);
   });
-
+  if (pageType == "topic") {
+    selectedDiv = shareButton.value;
+    let shareSpan = document.querySelector("#shareLink");
+    var baseUrl = window.location.origin;
+    shareSpan.textContent = `${baseUrl}/share/${selectedDiv}`;
+  }
   hideForms();
   addDivSelect();
   handleSideNav();
   setFormContent();
   editButton.addEventListener("click", e => {
-    toggleWarning(e, pagetype);
+    toggleEditMode(e, pageType);
   });
-  editButton.addEventListener("click", toggleEditMode);
+  shareButton.addEventListener("click", e => {
+    toggleShare(e, pageType);
+  });
+  exitButton.addEventListener("click", e => {
+    shareModal.classList.toggle("hidden");
+  });
+  copyButton.addEventListener("click", e => {
+    let text = document.querySelector("#shareLink").textContent;
+    toggleWarning(e, "share");
+    copyToClipboard(text);
+    shareModal.classList.toggle("hidden");
+  });
+  exitAddModalButton.addEventListener("click", openModal);
+  addButton.addEventListener("click", openModal);
 }

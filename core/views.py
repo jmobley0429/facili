@@ -54,7 +54,7 @@ def create(request):
 
 @login_required
 def edit(request, pk=None):
-    if pk == None:
+    if pk is None:
         pk = Discussion.objects.first().id
     template_name = "edit.html"
     context = {}
@@ -63,8 +63,12 @@ def edit(request, pk=None):
     context["add_form"] = TopicForm()
 
     if request.method == "GET":
-        all_topics = Topic.objects.all()
+        all_discussions = Discussion.objects.all()
+        discussion = Discussion.objects.get(pk=pk)
+        context["discussion"] = discussion
+        all_topics = discussion.topic_set.all()
         context["all_topics"] = all_topics
+        context["all_discussions"] = all_discussions
         return render(request, template_name, context)
 
     elif request.method == "POST":
@@ -79,7 +83,9 @@ def edit(request, pk=None):
             else:
                 form.save()
                 return HttpResponseRedirect(reverse("edit-discussion", args=[pk]))
-
+        if "select-discussion" in request.POST:
+            pk = request.POST["select-discussion"]
+            return HttpResponseRedirect(reverse("edit-discussion", args=[pk]))
         else:
             pk = request.POST["edit-topic"]
             parent_pk = request.POST["parent-discussion"]

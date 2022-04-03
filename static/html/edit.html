@@ -9,7 +9,26 @@
 <span class="warning"></span>
 <div class="scroll-list">
   <div class="header">
-    <h2>Discussion: {{discussion.title}}</h2>
+    <h2>Discussion:</h2>
+    <div class="select">
+        {% if all_discussions %}
+        <form class="" action="" id="change-discussion" method="post">
+          {% csrf_token %}
+        <select name="select-discussion" onchange="this.form.submit()">
+        {% for d in all_discussions %}
+        <div class="option">
+         <option value="{{d.id}}" {% if d.title == discussion.title%}
+          selected="selected"
+         {% endif %}>{{d.title}}</option>
+       </div>
+        {% endfor %}
+      </select>
+    </form>
+        {% else %}
+        <a href="{% url 'create' %}">No Discussions... Create one!</a>
+        {% endif %}
+
+    </div>
   </div>
   <div class="list-body">
     {% if not all_topics %}
@@ -22,7 +41,7 @@
       <h3>{{t.title}}</h3>
       <p>{{ t.description }}</p>
     </div>
-    <div class="list-item edit" value="{{t.id}}">
+    <div class="list-item edit hidden" value="{{t.id}}">
       <form id="edit-topic" class="" action="" method="post">
         {% csrf_token %} {{ edit_form }}
         <div class="button-row">
@@ -59,15 +78,17 @@
       </button>
     </div>
     <div class="button">
-      <button type="button" id="share" name="button">
+      <button type="button" id="share" value="{{ discussion.id }}">
         <img src="{% static 'media/share.svg' %}" alt="Share" />
       </button>
     </div>
   </div>
 </div>
+<div id="addModal" class="modal-bg hidden">
 <div class="modal-content">
   <div class="header">
     <h2>Add New Topic</h2>
+    <div id="exitEdit">""</div>
   </div>
   <form id="add-topic" action="" method="post">
     {% csrf_token %} {{ add_form }}
@@ -80,5 +101,26 @@
       Save Topic
     </button>
   </form>
+</div>
+</div>
+<div id="shareModal" class="modal-bg hidden">
+<div class="modal-content">
+  <div class="header">
+    <h2>Share Discussion</h2>
+    <div id="exitShare">""</div>
+  </div>
+  <div class="share-content">
+
+  <span id="shareLink"></span>
+    <button
+    id="copyLink"
+      type="button"
+      name="share-link"
+    >
+      <img src="{% static 'media/copy.svg' %}" alt="Copy">
+    </button>
+
+</div>
+</div>
 </div>
 {% endblock %}
