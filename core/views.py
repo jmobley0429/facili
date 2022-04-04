@@ -125,22 +125,19 @@ def discuss(request, pk=None):
     template_name = "discuss.html"
     context = {"custom_h1": "Start Discussion"}
     context["all_discussions"] = Discussion.objects.all()
-    if pk is not None:
-        if request.method == "GET":
-            print("Here: get")
+    if request.method == "POST":
+        if "select-discussion" in request.POST:
+            pk = request.POST["select-discussion"]
+            return HttpResponseRedirect(reverse("discuss-discussion", args=[str(pk)]))
+    if request.method == "GET":
+        if pk is not None:
             discussion = Discussion.objects.get(pk=pk)
             context["discussion"] = discussion
             context["facilitators"] = discussion.facilitator_set.all()
             context["all_topics"] = discussion.topic_set.all()
             return render(request, template_name, context)
-        if request.method == "POST":
-            if "select-discussion" in request.POST:
-                pk = request.POST["select-discussion"]
-                return HttpResponseRedirect(
-                    reverse("discuss-discussion", args=[str(pk)])
-                )
-    else:
-        return render(request, template_name, context)
+        else:
+            return render(request, template_name, context)
 
 
 def results(request, pk=None):

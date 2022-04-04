@@ -1,24 +1,71 @@
-{% extends "base_generic.html" %}
-{% block staticfiles %}
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/styles.css' %}">
-{% endblock %}
-{% block content %}
+{% extends "base_generic.html" %} {% block staticfiles %} {% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+{% endblock %} {% block content %}
+<div class="header row">
 <div class="select">
-    <form class="" action="" id="change-discussion" method="post">
-      {% csrf_token %}
-      <label for="select-discussion">Select Discussion</label>
+  <form class="" action="" id="change-discussion" method="post">
+    {% csrf_token %}
+    <label for="select-discussion">Select Discussion</label>
     <select name="select-discussion" onchange="this.form.submit()">
-    {% for d in all_discussions %}
-    <div class="option">
-     <option value="{{d.id}}" {% if d.title == discussion.title%}
-      selected="selected"
-     {% endif %}>{{d.title}}</option>
-   </div>
-   {% empty %}
-   <a href="{% url 'create' %}">No Discussions... Create one!</a>
-    {% endfor %}
-  </select>
-</form>
-<h2>{{discussion.title}}</h2>
+      {% for d in all_discussions %}
+      <div class="option">
+        <option value="{{d.id}}" {% if d.title == discussion.title%}
+         selected="selected"
+        {% endif %}>{{d.title}}</option></div>
+      {% empty %}
+      <a href="{% url 'create' %}">No Discussions... Create one!</a>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+  {% if discussion %}
+<div class="scroll-list">
+    <div class="list-body">
+      {% if all_topics %} {% for t in all_topics %}
+      <div class="list-item">
+        <h3>{{t.title}}</h3>
+        <p>{{t.description}}</p>
+      </div>
+      <div class="">
+        <div class="list-item">
+          <h2>The Topic Title</h2>
+          <p></p>
+          <div class="list-item response">
+            <form id="feed-response" class="" action="" method="post">
+              {% csrf_token %}
+              <label for="response">Response</label>
+              <textarea name="response"></textarea>
+              <button type="submit" name="submit-response" form="feed-response"></button>
+            </form>
+          </div>
+          <div class="scroll-list">
+            <div class="list-body">
+            {% for item in topic.feed_item_set.all %}
+              <div class="list-item feed">
+                <h4>{{item.facilitator}}'s group</h4>
+                <p>item.content</p>
+                <button name="upvote">+</button>
+                {% if item.upvotes > 0 %}
+                 <span>{item.upvotes} agreed</span>
+                {% endif %}
+                <button name="downvote">-</button>
+                {% if item.downvotes > 0 %}
+                 <span>{item.downvotes} disagreed</span>
+                {% endif %}
+              {% endfor %}
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+        <div>No topics yet...add some! <a href="{% url 'edit-discussion' discussion.id %}"><img src="{% static 'media/arrow-right.svg' %}" alt=""></a></div>
+       {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
 {% endblock %}
