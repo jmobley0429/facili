@@ -124,27 +124,35 @@ def share(request, pk):
 def discuss(request, pk=None):
     template_name = "discuss.html"
     context = {"custom_h1": "Start Discussion"}
-    if pk == None:
-        context["none-selected"] = True
-        return render(request, template_name, context)
-    if request.method == "GET":
-        discussion = Discussion.objects.get(pk=pk)
-        facilitators = discussion.facilitator_set.all()
-        topics = discussion.topic_set.all()
-        context["facilitators"] = facilitators
-        context["discussion"] = discussion
-        context["topics"] = topics
+    context["all_discussions"] = Discussion.objects.all()
+    if pk is not None:
+        if request.method == "GET":
+            print("Here: get")
+            discussion = Discussion.objects.get(pk=pk)
+            context["discussion"] = discussion
+            context["facilitators"] = discussion.facilitator_set.all()
+            context["all_topics"] = discussion.topic_set.all()
+            return render(request, template_name, context)
+        if request.method == "POST":
+            if "select-discussion" in request.POST:
+                pk = request.POST["select-discussion"]
+                return HttpResponseRedirect(
+                    reverse("discuss-discussion", args=[str(pk)])
+                )
+    else:
         return render(request, template_name, context)
 
 
 def results(request, pk=None):
     template_name = "results.html"
     context = {"custom_h1": "Review Discussion"}
-    if pk == None:
+    if pk is None:
         context["none-selected"] = True
         return render(request, template_name, context)
     if request.method == "GET":
         discussion = Discussion.objects.get(pk=pk)
         context["results"] = discussion.get_discussion_results()
+        context["discussion"] = discussion
+        return render(request, template_name, context)
         context["discussion"] = discussion
         return render(request, template_name, context)

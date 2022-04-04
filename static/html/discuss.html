@@ -4,5 +4,21 @@
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% endblock %}
 {% block content %}
-<p>this is the discuss view</p>
+<div class="select">
+    <form class="" action="" id="change-discussion" method="post">
+      {% csrf_token %}
+      <label for="select-discussion">Select Discussion</label>
+    <select name="select-discussion" onchange="this.form.submit()">
+    {% for d in all_discussions %}
+    <div class="option">
+     <option value="{{d.id}}" {% if d.title == discussion.title%}
+      selected="selected"
+     {% endif %}>{{d.title}}</option>
+   </div>
+   {% empty %}
+   <a href="{% url 'create' %}">No Discussions... Create one!</a>
+    {% endfor %}
+  </select>
+</form>
+<h2>{{discussion.title}}</h2>
 {% endblock %}

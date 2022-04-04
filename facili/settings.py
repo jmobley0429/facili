@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "facili.wsgi.application"
+ASGI_APPLICATION = "facili.asgi.application"
 
 
 # Database
@@ -126,8 +129,6 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-import os
 
 # LOGGING = {
 #     "version": 1,
