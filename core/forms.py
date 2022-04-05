@@ -18,3 +18,12 @@ class FacilitatorForm(forms.ModelForm):
     class Meta:
         model = Facilitator
         fields = ["name"]
+
+
+class FeedItemForm(forms.ModelForm):
+    class Meta:
+        model = FeedItem
+        fields = ["content"]
+        labels = {
+            "content": "Response",
+        }

@@ -150,7 +150,7 @@ function openModal(e) {
   modal.classList.toggle("hidden");
 }
 
-export function initPage(pageType) {
+export function initEditPages(pageType) {
   cancelEditButtons.forEach((btn, i) => {
     btn.addEventListener("click", toggleEditMode);
   });
@@ -162,8 +162,8 @@ export function initPage(pageType) {
   }
   hideForms();
   addDivSelect();
-  handleSideNav();
   setFormContent();
+  handleSideNav();
   editButton.addEventListener("click", e => {
     toggleEditMode(e, pageType);
   });
@@ -181,4 +181,10 @@ export function initPage(pageType) {
   });
   exitAddModalButton.addEventListener("click", openModal);
   addButton.addEventListener("click", openModal);
+}
+
+export function initStdPages() {
+  handleSideNav();
+  addDivSelect();
+  hideForms();
 }

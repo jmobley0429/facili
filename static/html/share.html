@@ -2,14 +2,24 @@
 {% load static %}
 {% block staticfiles %}
 <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script defer type="text/javascript" src="{% static 'js-bundles/share-bundle.js' %}"></script>
+
 {% endblock staticfiles %}
 {% block content %}
 <h2>Add Facilitator</h2>
 <div class="modal-content facilitator">
+  <p class="warning">{{warning}}</p>
   <form id="add-facilitator" action="" method="post">
     {% csrf_token %}
-      {{ form }}
-      <button type="submit" form="add-facilitator" name="button">Add Facilitator</button>
+    <label for="new-facilitator">New Facilitator</label>
+      <input type="text" name="new-facilitator" value="">
+      <label for="previous-users">Select from previous facilitators</label>
+      <select class="" name="previous-users">
+        {% for user in previous_users %}
+         <option value="{{user.id}}">{{user.name}}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" form="add-facilitator">Add Facilitator</button>
   </form>
 </div>
 {% endblock %}

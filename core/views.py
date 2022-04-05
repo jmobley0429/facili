@@ -1,8 +1,9 @@
 from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
 from django.views import View
+from django.contrib.auth.models import User
 from .models import Discussion, Topic, FeedItem, Facilitator
-from .forms import DiscussionForm, TopicForm, FacilitatorForm
+from .forms import DiscussionForm, TopicForm, FacilitatorForm, FeedItemForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -105,39 +106,57 @@ def edit(request, pk=None):
 def share(request, pk):
     template_name = "share.html"
     context = {"custom_h1": "Share Discussion"}
+    previous_users = Facilitator.objects.all()
+    context["previous_users"] = previous_users
     if request.method == "GET":
         form = FacilitatorForm()
         context["form"] = form
         return render(request, template_name, context)
     elif request.method == "POST":
+        prev = request.POST["previous-users"]
+        new = request.POST["new-facilitator"]
         discussion = Discussion.objects.get(pk=pk)
-        facilitator = Facilitator(discussion=discussion)
-        form = FacilitatorForm(request.POST, instance=facilitator)
-        if not form.is_valid():
-            context["form"] = form
+        if not prev and not new:
+            context["warning"] = "Please enter a name or select from previous users"
             return render(request, template_name, context)
-        else:
-            form.save()
-            return HttpResponseRedirect(reverse("discuss-discussion", args=[pk]))
+        elif prev:
+            user_id = request.POST["previous-users"]
+            user = User.objects.get(pk=user_id)
+        elif new:
+            username = new
+            user = User.objects.create(username=username)
+        Facilitator.objects.create(
+            name=user.username, assoc_user=user, discussion=discussion
+        )
+        return HttpResponseRedirect(reverse("discuss-discussion", args=[pk]))
 
 
 def discuss(request, pk=None):
     template_name = "discuss.html"
     context = {"custom_h1": "Start Discussion"}
     context["all_discussions"] = Discussion.objects.all()
+    if request.method == "GET":
+        if pk is not None:
+            discussion = Discussion.objects.get(pk=pk)
+            all_topics = discussion.topic_set.all()
+            context["discussion"] = discussion
+            context["facilitators"] = discussion.facilitator_set.all()
+            feed_forms = [FeedItemForm(instance=t) for t in all_topics]
+            context["all_topics_zip"] = zip(all_topics, feed_forms)
+            return render(request, template_name, context)
+        else:
+            return render(request, template_name, context)
     if request.method == "POST":
         if "select-discussion" in request.POST:
             pk = request.POST["select-discussion"]
             return HttpResponseRedirect(reverse("discuss-discussion", args=[str(pk)]))
-    if request.method == "GET":
-        if pk is not None:
-            discussion = Discussion.objects.get(pk=pk)
-            context["discussion"] = discussion
-            context["facilitators"] = discussion.facilitator_set.all()
-            context["all_topics"] = discussion.topic_set.all()
-            return render(request, template_name, context)
-        else:
-            return render(request, template_name, context)
+        elif "response" in request.POST:
+            topic_id = request.POST["submit-response"]
+            topic = Topic.objects.get(pk=topic_id)
+            form = FeedItemForm(request.POST, instance=Topic)
+            if form.is_valid():
+                form.save()
+                HttpResponseRedirect(request.POST["next"])
 
 
 def results(request, pk=None):

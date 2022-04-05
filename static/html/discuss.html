@@ -1,4 +1,7 @@
 {% extends "base_generic.html" %} {% block staticfiles %} {% load static %}
+<script defer src="{% static 'js-bundles/live-discussion-bundle.js' %}" charset="utf-8"></script>
+<script defer src="{% static 'js-bundles/discuss-bundle.js' %}" charset="utf-8"></script>
+
 <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 {% endblock %} {% block content %}
 <div class="header row">
@@ -21,27 +24,24 @@
   {% if discussion %}
 <div class="scroll-list">
     <div class="list-body">
-      {% if all_topics %} {% for t in all_topics %}
-      <div class="list-item">
+      {% if all_topics_zip %} {% for t, f in all_topics_zip%}
+      <div class="list-item" value="{{t.id}}">
         <h3>{{t.title}}</h3>
         <p>{{t.description}}</p>
       </div>
-      <div class="">
+      <div class="{{t.id}}">
         <div class="list-item">
-          <h2>The Topic Title</h2>
-          <p></p>
+          <h3>{{t.title}}</h3>
+          <p>{{t.description}}</p>
           <div class="list-item response">
-            <form id="feed-response" class="" action="" method="post">
-              {% csrf_token %}
-              <label for="response">Response</label>
-              <textarea name="response"></textarea>
-              <button type="submit" name="submit-response" form="feed-response"></button>
-            </form>
+            <input type="text" id="responseInput" value="">
+              <button type="button" id="submitResponseButton" value="{{t.id}}" form="feed-response">Add</button>
+              {{ t.id|json_script:"feed-item"}}
           </div>
           <div class="scroll-list">
-            <div class="list-body">
-            {% for item in topic.feed_item_set.all %}
-              <div class="list-item feed">
+            <div id="liveFeed" class="list-body">
+            {% for item in t.feed_item_set.all %}
+              <div  class="list-item feed">
                 <h4>{{item.facilitator}}'s group</h4>
                 <p>item.content</p>
                 <button name="upvote">+</button>

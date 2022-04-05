@@ -1,4 +1,10 @@
 {% extends "base_generic.html" %}
+{% load static %}
+{% block staticfiles %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script defer type="text/javascript" src="{% static 'js-bundles/results-bundle.js' %}"></script>
+
+{% endblock staticfiles %}
 {% block content %}
 <p>this is the review view</p>
 {% endblock %}

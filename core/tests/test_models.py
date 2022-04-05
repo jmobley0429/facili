@@ -1,10 +1,12 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
 from core.models import Discussion, Topic, FeedItem, Facilitator
 
 
 class TestDiscussion(TestCase):
     @classmethod
     def setUp(cls):
+        user = User.objects.create(username="Jake")
         for i in range(3):
             title = f"The Title {i}"
             description = f"The description {i}"
@@ -16,7 +18,7 @@ class TestDiscussion(TestCase):
                     title=title, description=desc, discussion=discussion
                 )
                 facilitator = Facilitator.objects.create(
-                    name="Ned Nameson", discussion=discussion
+                    name="Ned Nameson", discussion=discussion, assoc_user=user
                 )
                 for i in range(3):
                     FeedItem.objects.create(
@@ -102,16 +104,18 @@ class TestTopic(TestCase):
 class TestFeedItem(TestCase):
     @classmethod
     def setUp(cls):
+        user = User.objects.create(username="Jake")
         discussion = Discussion.objects.create(
             title="DiscTitle", description="DiscDesc"
         )
-        facilitator = Facilitator.objects.create(
-            name="Ned Nameson", discussion=discussion
+        facilitator = Facilitator(
+            name="Ned Nameson", discussion=discussion, assoc_user=user
         )
 
         topic = Topic.objects.create(
             title="Topic title", description="Topic description", discussion=discussion
         )
+        facilitator.save()
         for i in range(5):
             content = f"The content {i}"
             feedback = f"The feedback {i}"

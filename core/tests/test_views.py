@@ -399,7 +399,7 @@ class TestDiscussView(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_discuss_default_view_can_be_called_by_name(self):
+    def test_discuss_discussion_default_view_can_be_called_by_name(self):
         pk = self.discussion_id
         url = reverse("discuss-discussion", args=[str(pk)])
         response = self.client.get(url)
@@ -416,10 +416,10 @@ class TestDiscussView(TestCase):
         url = reverse("discuss-discussion", args=[pk])
         response = self.client.get(url)
         context = response.context
-        self.assertTrue("custom_h1" in context)
+        self.assertTrue("all_discussions" in context)
         self.assertTrue("discussion" in context)
         self.assertTrue("facilitators" in context)
-        self.assertTrue("topics" in context)
+        self.assertTrue("all_topics_zip" in context)
 
 
 class TestResultsView(TestCase):
@@ -433,7 +433,7 @@ class TestResultsView(TestCase):
 
     def test_results_view_exists_at_correct_url(self):
         pk = self.discussion_id
-        url = f"/results/{pk}/"
+        url = f"/results/{pk}"
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
