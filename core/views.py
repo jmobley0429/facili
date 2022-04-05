@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from .models import Discussion, Topic, FeedItem, Facilitator
 from .forms import DiscussionForm, TopicForm, FacilitatorForm, FeedItemForm
 from django.contrib.auth.decorators import login_required
+from django.utils.datastructures import MultiValueDictKeyError
 
 
 @login_required
@@ -115,15 +116,21 @@ def edit(request, pk=None):
 def share(request, pk):
     template_name = "share.html"
     context = {"custom_h1": "Share Discussion"}
-    previous_users = Facilitator.objects.all()
+    previous_users = User.objects.all()
     context["previous_users"] = previous_users
     if request.method == "GET":
         form = FacilitatorForm()
         context["form"] = form
         return render(request, template_name, context)
     elif request.method == "POST":
-        prev = request.POST["previous-users"]
-        new = request.POST["new-facilitator"]
+        try:
+            prev = request.POST["previous-users"]
+        except MultiValueDictKeyError:
+            prev = None
+        try:
+            new = request.POST["new-facilitator"]
+        except MultiValueDictKeyError:
+            new = None
         discussion = Discussion.objects.get(pk=pk)
         if not prev and not new:
             context["warning"] = "Please enter a name or select from previous users"
@@ -137,6 +144,7 @@ def share(request, pk):
         Facilitator.objects.create(
             name=user.username, assoc_user=user, discussion=discussion
         )
+
         return HttpResponseRedirect(reverse("discuss-discussion", args=[pk]))
 
 

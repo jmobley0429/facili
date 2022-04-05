@@ -16,7 +16,7 @@
       <label for="previous-users">Select from previous facilitators</label>
       <select class="" name="previous-users">
         {% for user in previous_users %}
-         <option value="{{user.id}}">{{user.name}}</option>
+         <option value="{{user.id}}">{{user.username}}</option>
         {% endfor %}
       </select>
       <button type="submit" form="add-facilitator">Add Facilitator</button>

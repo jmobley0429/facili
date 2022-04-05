@@ -30,6 +30,13 @@ module.exports = [
     }
   },
   {
+    entry: "./static/js/discuss.js", //path to input file
+    output: {
+      filename: "discuss-bundle.js",
+      path: path.resolve(__dirname, "./static/js-bundles/")
+    }
+  },
+  {
     entry: "./static/js/results.js", //path to input file
     output: {
       filename: "results-bundle.js",

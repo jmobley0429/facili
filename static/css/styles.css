@@ -5,13 +5,23 @@
 }
 
 :root {
-  --primary-color-dark: #f57c00;
+  /* BLUE THEME */
+  --primary-color-dark: #455a64;
+  --primary-color-darker: #263d49;
+  --primary-color: #607d8b;
+  --primary-color-light: #607d8b;
+  --primary-color-text: #121212;
+  --color-accent: #448aff;
+  --text-color-primary: #212121;
+  --secondary-text-color: #757575;
+  /* ORANGE THEME */
+  /* --primary-color-dark: #f57c00;
   --primary-color-darker: #da5c01;
   --primary-color: #ff9800;
   --primary-color-light: #ffc954;
   --primary-color-lighter: #cfddfb;
   --primary-color-text: #181818;
-  --accent-color: #ffd706;
+  --accent-color: #ffd706; */
   --selected-color: #95eeee;
   --secondary-text-color: #757575;
   --divider-color: #bdbdbd;
@@ -374,7 +384,8 @@ button {
   cursor: pointer;
 }
 
-button img {
+button img,
+.btn.muted > img {
   width: 2rem;
   height: 2rem;
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(307deg)

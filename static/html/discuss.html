@@ -5,6 +5,10 @@
 <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 {% endblock %} {% block content %}
 <div class="header row">
+  {% if not facilitators %}
+  <span> This discussion doesn't have any facilitators yet...share the link to get started!</span>
+  <a class="btn muted" href="{% url 'share-discussion' pk=discussion.id %}"><img src="{% static 'media/share.svg' %}" alt=""></a>
+  {% endif %}
 <div class="select">
   <form class="" action="" id="change-discussion" method="post">
     {% csrf_token %}
@@ -20,9 +24,15 @@
       {% endfor %}
     </select>
   </form>
+  <div class="list-item">
+      <h4>Facilitators</h4>
+      {% for f in facilitators %}
+        <p>{{f.name}}</p>
+      {% endfor %}
+  </div>
 </div>
   {% if discussion %}
-<div class="scroll-list">
+  <div class="scroll-list">
     <div class="list-body">
       {% if all_topics_zip %} {% for t, f in all_topics_zip%}
       <div class="list-item" value="{{t.id}}">
@@ -33,29 +43,12 @@
         <div class="list-item">
           <h3>{{t.title}}</h3>
           <p>{{t.description}}</p>
-          <div class="list-item response">
             <input type="text" id="responseInput" value="">
-              <button type="button" id="submitResponseButton" value="{{t.id}}" form="feed-response">Add</button>
+            <button type="button" id="submitResponseButton" value="{{t.id}}" >Add</button>
               {{ t.id|json_script:"feed-item"}}
-          </div>
-          <div class="scroll-list">
-            <div id="liveFeed" class="list-body">
-            {% for item in t.feed_item_set.all %}
-              <div  class="list-item feed">
-                <h4>{{item.facilitator}}'s group</h4>
-                <p>item.content</p>
-                <button name="upvote">+</button>
-                {% if item.upvotes > 0 %}
-                 <span>{item.upvotes} agreed</span>
-                {% endif %}
-                <button name="downvote">-</button>
-                {% if item.downvotes > 0 %}
-                 <span>{item.downvotes} disagreed</span>
-                {% endif %}
-              {% endfor %}
+              <div class="scroll-list">
+                <div id="liveFeed" class="list-body"></div>
               </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

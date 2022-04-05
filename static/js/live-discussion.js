@@ -39,8 +39,8 @@ document.querySelector("#responseInput").onkeyup = function(e) {
 
 document.querySelector("#submitResponseButton").onclick = function(e) {
   const contentInput = document.querySelector("#responseInput");
+  const topicId = document.querySelector("#submitResponseButton");
   const content = contentInput.value;
-
-  topicSocket.send(JSON.stringify({ content: content }));
+  topicSocket.send(JSON.stringify({ content: content, topic: topicId }));
   contentInput.value = "";
 };

@@ -1,7 +1,5 @@
 import { multiToggle } from "./utils.js";
 
-let selectedDiv;
-
 const formDivs = document.querySelectorAll("div.list-item.edit");
 const showDivs = document.querySelectorAll(".list-item");
 const editButton = document.querySelector("button#edit");
@@ -16,7 +14,10 @@ const exitButton = document.querySelector("#exitShare");
 const copyButton = document.querySelector("#copyLink");
 const cancelDeleteButton = document.querySelector("#cancelDelete");
 const exitDeleteButton = document.querySelector("#exitDelete");
+const shareSpan = document.querySelector("#shareLink");
+
 let confirmDeleteButton = document.querySelector("button#confirmDelete");
+let selectedDiv;
 
 function hideForms() {
   formDivs.forEach((form, i) => {
@@ -24,10 +25,12 @@ function hideForms() {
   });
 }
 
-function addDivSelect() {
+function addDivSelect(pageType) {
   showDivs.forEach((div, i) => {
     if (!div.classList.contains("edit")) {
-      div.addEventListener("click", selectDiv);
+      div.addEventListener("click", e => {
+        selectDiv(e, pageType);
+      });
     }
   });
 }
@@ -40,17 +43,14 @@ function setFormContent() {
     var titleInputs = document.querySelectorAll(titleSel);
     var titles = document.querySelectorAll("div.list-item > div > h3");
     var descs = document.querySelectorAll("div.list-item > div > p");
-
     titleInputs[i].value = titles[i].textContent;
     descInputs[i].value = descs[i].textContent;
   });
 }
 
-function selectDiv(e) {
+function selectDiv(e, pageType) {
   let div = e.currentTarget;
   var isSelected = div.classList.contains("selected");
-  var baseUrl = window.location.origin;
-  var shareSpan = document.querySelector("#shareLink");
   showDivs.forEach((item, i) => {
     item.classList.remove("selected");
   });
@@ -60,6 +60,13 @@ function selectDiv(e) {
     div.classList.add("selected");
   }
   selectedDiv = div.getAttribute("value");
+  if (pageType === "discussion" || pageType === "topic") {
+    setButtonValueFromSelectedDiv();
+  }
+}
+
+function setButtonValueFromSelectedDiv() {
+  var baseUrl = window.location.origin;
   shareSpan.textContent = `${baseUrl}/share/${selectedDiv}`;
   editButton.setAttribute("value", selectedDiv);
   shareButton.setAttribute("value", selectedDiv);
@@ -210,8 +217,11 @@ export function initEditPages(pageType) {
   });
 }
 
-export function initStdPages() {
+export function initStdPages(pageType) {
   handleSideNav();
-  addDivSelect();
   hideForms();
+}
+
+export function initDiscussPage(pageType) {
+  addDivSelect(pageType);
 }
