@@ -1,5 +1,4 @@
 from django.urls import include, path
-from django.contrib.auth import urls as auth_urls
 from . import views
 
 
@@ -13,5 +12,3 @@ urlpatterns = [
     path("results/", views.results, name="results"),
     path("results/<int:pk>", views.results, name="results-discussion"),
 ]
-
-urlpatterns += auth_urls.urlpatterns[2:]

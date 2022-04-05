@@ -7,12 +7,16 @@ const showDivs = document.querySelectorAll(".list-item");
 const editButton = document.querySelector("button#edit");
 const shareButton = document.querySelector("button#share");
 const addButton = document.querySelector("button#add");
+const deleteButton = document.querySelector("button#delete");
 const warningSpan = document.querySelector("span.warning");
 const hamMenu = document.querySelector("#hamburger");
 const cancelEditButtons = document.querySelectorAll("#cancelEdit");
 const exitAddModalButton = document.querySelector("#exitEdit");
 const exitButton = document.querySelector("#exitShare");
-let copyButton = document.querySelector("#copyLink");
+const copyButton = document.querySelector("#copyLink");
+const cancelDeleteButton = document.querySelector("#cancelDelete");
+const exitDeleteButton = document.querySelector("#exitDelete");
+let confirmDeleteButton = document.querySelector("button#confirmDelete");
 
 function hideForms() {
   formDivs.forEach((form, i) => {
@@ -34,8 +38,8 @@ function setFormContent() {
     var titleSel = '.list-item.edit form > input[name="title"]';
     var descInputs = document.querySelectorAll(descSel);
     var titleInputs = document.querySelectorAll(titleSel);
-    var titles = document.querySelectorAll("div.list-item > h3");
-    var descs = document.querySelectorAll("div.list-item > p");
+    var titles = document.querySelectorAll("div.list-item > div > h3");
+    var descs = document.querySelectorAll("div.list-item > div > p");
 
     titleInputs[i].value = titles[i].textContent;
     descInputs[i].value = descs[i].textContent;
@@ -58,6 +62,9 @@ function selectDiv(e) {
   selectedDiv = div.getAttribute("value");
   shareSpan.textContent = `${baseUrl}/share/${selectedDiv}`;
   editButton.setAttribute("value", selectedDiv);
+  shareButton.setAttribute("value", selectedDiv);
+  deleteButton.setAttribute("value", selectedDiv);
+  confirmDeleteButton.setAttribute("value", selectedDiv);
 }
 
 function toggleWarning(e, pageType) {
@@ -83,7 +90,7 @@ function toggleWarning(e, pageType) {
 }
 
 function toggleEditMode(e, pageType) {
-  if (selectedDiv == undefined) {
+  if (e.currentTarget.value == "") {
     toggleWarning(e, pageType);
   } else {
     var formSelector = `div.list-item.edit[value="${selectedDiv}"]`;
@@ -129,7 +136,7 @@ function handleSideNav() {
 }
 
 function toggleShare(e, pageType) {
-  if (selectedDiv == undefined) {
+  if (e.currentTarget.value === "") {
     toggleWarning(e, pageType);
   } else {
     createShareModal(e);
@@ -149,6 +156,20 @@ function openModal(e) {
   let modal = document.querySelector(".modal-bg");
   modal.classList.toggle("hidden");
 }
+function toggleDelete(e, pageType) {
+  if (confirmDeleteButton.value === "") {
+    toggleWarning(e, pageType);
+  } else {
+    let deleteModal = document.querySelector("#deleteModal");
+    deleteModal.classList.toggle("hidden");
+    confirmDeleteButton.addEventListener("click", deleteItem);
+  }
+}
+function deleteItem(e) {
+  let itemId = deleteButton.value;
+  let deleteForm = document.querySelector("form#confirmDelete");
+  e.currentTarget.value = itemId;
+}
 
 export function initEditPages(pageType) {
   cancelEditButtons.forEach((btn, i) => {
@@ -160,15 +181,15 @@ export function initEditPages(pageType) {
     var baseUrl = window.location.origin;
     shareSpan.textContent = `${baseUrl}/share/${selectedDiv}`;
   }
-  hideForms();
-  addDivSelect();
   setFormContent();
-  handleSideNav();
   editButton.addEventListener("click", e => {
     toggleEditMode(e, pageType);
   });
   shareButton.addEventListener("click", e => {
     toggleShare(e, pageType);
+  });
+  deleteButton.addEventListener("click", e => {
+    toggleDelete(e, pageType);
   });
   exitButton.addEventListener("click", e => {
     shareModal.classList.toggle("hidden");
@@ -181,6 +202,12 @@ export function initEditPages(pageType) {
   });
   exitAddModalButton.addEventListener("click", openModal);
   addButton.addEventListener("click", openModal);
+
+  [exitDeleteButton, cancelDeleteButton].forEach(btn => {
+    btn.addEventListener("click", () => {
+      deleteModal.classList.toggle("hidden");
+    });
+  });
 }
 
 export function initStdPages() {

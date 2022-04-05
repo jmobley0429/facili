@@ -32,7 +32,11 @@ def create(request):
             else:
                 form.save()
                 return HttpResponseRedirect(reverse("create"))
-
+        elif "delete-item" in request.POST:
+            pk = request.POST["delete-item"]
+            discussion = Discussion.objects.get(pk=pk)
+            discussion.delete()
+            return HttpResponseRedirect(reverse("create"))
         else:
             pk = request.POST["edit-discussion"]
             ("initial POST: ", request.POST)
@@ -73,6 +77,9 @@ def edit(request, pk=None):
         return render(request, template_name, context)
 
     elif request.method == "POST":
+        if "select-discussion" in request.POST:
+            pk = request.POST["select-discussion"]
+            return HttpResponseRedirect(reverse("edit-discussion", args=[pk]))
         if "add-topic" in request.POST:
             pk = request.POST["add-topic"]
             discussion = Discussion.objects.get(pk=pk)
@@ -84,9 +91,11 @@ def edit(request, pk=None):
             else:
                 form.save()
                 return HttpResponseRedirect(reverse("edit-discussion", args=[pk]))
-        if "select-discussion" in request.POST:
-            pk = request.POST["select-discussion"]
-            return HttpResponseRedirect(reverse("edit-discussion", args=[pk]))
+        elif "delete-item" in request.POST:
+            id = request.POST["delete-item"]
+            topic = Topic.objects.get(pk=id)
+            topic.delete()
+            return HttpResponseRedirect(reverse("edit-discussion", args=[str(pk)]))
         else:
             pk = request.POST["edit-topic"]
             parent_pk = request.POST["parent-discussion"]

@@ -161,13 +161,23 @@ div.header select .option {
 
 .list-item,
 .list-item form {
-  display: flex;
-  flex-flow: column;
-  align-items: stretch;
   padding: 0.75em;
   border-radius: 0.5rem;
   transition: 200ms;
   background-color: white;
+}
+
+.list-item form {
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+}
+
+.list-item {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .list-item .edit .selected {
@@ -233,7 +243,7 @@ div.button-row > button {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  gap: 3rem;
+  gap: 4rem;
   flex: 0 1 auto;
   width: 100%;
   padding-top: 1rem;
@@ -378,11 +388,7 @@ form button#add {
   box-shadow: 0 5px 5px var(--shadow-color);
   margin-top: -1.5rem;
 }
-button#add img {
-  width: 2em;
-  height: 2em;
-  filter: invert(5%);
-}
+
 .button-row button {
   min-width: 6rem;
 }
@@ -402,23 +408,14 @@ nav a:hover {
   color: var(--primary-color-dark);
 }
 
-#addButton {
-  margin-top: -2.5rem;
-  background-color: var(--accent-color);
-  padding: 1rem;
-  border-radius: 50px;
-  box-shadow: 0 3px 4px var(--shadow-color);
-  transition: 100ms;
-}
-
 #addButton:hover,
 #addButton:focus {
   transform: translateY(-0.2rem);
 }
 
-.share-content button img {
-  filter: invert(53%) sepia(30%) saturate(5460%) hue-rotate(7deg)
-    brightness(101%) contrast(103%);
+.btn.muted {
+  filter: invert(57%) sepia(0%) saturate(0%) hue-rotate(144deg) brightness(94%)
+    contrast(85%);
 }
 
 form button {
