@@ -1,5 +1,8 @@
-import { initEditPages } from "./master.js";
+import { initEditPages, addDivSelect, generateTooltips } from "./master.js";
 
 document.addEventListener("readystatechange", function(e) {
-  initEditPages("discussion");
+  let pageType = "discussion";
+  addDivSelect(pageType);
+  initEditPages(pageType);
+  generateTooltips(pageType);
 });

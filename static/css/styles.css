@@ -11,7 +11,7 @@
   --primary-color: #607d8b;
   --primary-color-light: #607d8b;
   --primary-color-text: #121212;
-  --color-accent: #448aff;
+  --accent-color: #8ac1cb;
   --text-color-primary: #212121;
   --secondary-text-color: #757575;
   /* ORANGE THEME */
@@ -22,7 +22,8 @@
   --primary-color-lighter: #cfddfb;
   --primary-color-text: #181818;
   --accent-color: #ffd706; */
-  --selected-color: #95eeee;
+  --selected-color: #439e9e;
+  --selected-color-dark: #379898;
   --secondary-text-color: #757575;
   --divider-color: #bdbdbd;
   --surface-bg: #f6f6f6;
@@ -31,9 +32,14 @@
 }
 /* global*********************************/
 html,
-body {
+body,
+ul {
   margin: 0;
   padding: 0;
+}
+
+html,
+body {
   font-family: "Roboto", sans-serif;
   color: var(--primary-color-text);
   background-color: white;
@@ -44,6 +50,11 @@ body {
   display: flex;
   flex-flow: column;
 }
+
+ul {
+  list-style: none;
+}
+
 /* typography *****************************************/
 h1,
 h2,
@@ -162,11 +173,29 @@ div.header select .option {
   box-shadow: 0 0 7px #dddddd;
 }
 
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   box-shadow: 0 3px 3px var(--shadow-color);
   margin: 0 0.3rem;
   text-overflow: clip;
   scroll-margin-top: 1rem;
+}
+
+.row {
+  flex-flow: row;
+}
+
+.col {
+  flex-flow: column;
 }
 
 .list-item,
@@ -179,15 +208,7 @@ div.header select .option {
 
 .list-item form {
   display: flex;
-  flex-flow: column;
   align-items: stretch;
-}
-
-.list-item {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .list-item .edit .selected {
@@ -205,11 +226,12 @@ div.header select .option {
 .list-item.selected form {
   gap: 1rem;
   max-height: 100vh;
+  max-width: 95%;
 }
 .list-item.selected {
-  border: 1px solid var(--primary-color-light);
+  border: 1px solid var(--selected-color-dark);
   border-radius: 0.5rem;
-  box-shadow: 0 3px 7px #dba946;
+  box-shadow: 0 3px 7px var(--selected-color);
   overflow: visible;
   max-height: 100vh;
 }
@@ -253,7 +275,7 @@ div.button-row > button {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  gap: 4rem;
+  gap: 3rem;
   flex: 0 1 auto;
   width: 100%;
   padding-top: 1rem;
@@ -377,11 +399,37 @@ textarea {
   word-wrap: normal;
 }
 
+.content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 0 auto;
+}
+
 /* buttons + icons  *****************************************/
 button {
   background-color: transparent;
   border-style: none;
   cursor: pointer;
+}
+
+.button {
+  position: relative;
+}
+
+.button > .tooltip {
+  background-color: var(--primary-color-darker);
+  color: white;
+  position: absolute;
+  left: -50%;
+  top: 0;
+  margin-top: -3.8rem;
+  z-index: 1;
+  font-size: 0.8em;
+  padding: 0.3em;
+  border-radius: 0.3em;
+  transition: 100ms;
+  display: none;
 }
 
 button img,
@@ -392,6 +440,7 @@ button img,
     brightness(103%) contrast(101%);
   pointer-events: inherit;
 }
+
 form button#add {
   background-color: var(--accent-color);
   border-radius: 500px;
@@ -427,6 +476,12 @@ nav a:hover {
 .btn.muted {
   filter: invert(57%) sepia(0%) saturate(0%) hue-rotate(144deg) brightness(94%)
     contrast(85%);
+  transition: 250ms;
+}
+
+.btn.muted img {
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 form button {
@@ -438,6 +493,10 @@ form button {
   font-weight: bold;
   text-align: center;
   box-shadow: 0 2px 3px gray;
+}
+
+.mirror-y {
+  transform: scaleY(-1);
 }
 
 /* scripting **********************************************/

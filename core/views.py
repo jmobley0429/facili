@@ -158,6 +158,7 @@ def discuss(request, pk=None):
             all_topics = discussion.topic_set.all()
             context["discussion"] = discussion
             context["facilitators"] = discussion.facilitator_set.all()
+            context["users"] = {i: u.username for i, u in enumerate(User.objects.all())}
             feed_forms = [FeedItemForm(instance=t) for t in all_topics]
             context["all_topics_zip"] = zip(all_topics, feed_forms)
             return render(request, template_name, context)

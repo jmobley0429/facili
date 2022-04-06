@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="264.58331mm"
+   height="158.7489mm"
+   viewBox="0 0 264.58331 158.7489"
+   version="1.1"
+   id="svg2288"
+   inkscape:version="1.1.1 (1:1.1+202109281944+c3084ef5ed)"
+   sodipodi:docname="down-arrow.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview2290"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="0.51224046"
+     inkscape:cx="521.23958"
+     inkscape:cy="540.76166"
+     inkscape:window-width="1600"
+     inkscape:window-height="839"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2349"
+       originx="26.458333"
+       originy="26.458334" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2285" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(26.458334,26.458334)">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:19.8437;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 42.333607,21.166667 105.83333,84.666389 169.33305,21.166667"
+       id="path2403" />
+  </g>
+</svg>

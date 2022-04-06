@@ -1,5 +1,7 @@
-import { initEditPages } from "./master.js";
+import { initEditPages, addDivSelect } from "./master.js";
 
-document.addEventListener("readystatechange", e => {
-  initEditPages("topic");
+document.addEventListener("readystatechange", function(e) {
+  let pageType = "topic";
+  addDivSelect(pageType);
+  initEditPages(pageType);
 });

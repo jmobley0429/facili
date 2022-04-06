@@ -26,10 +26,10 @@
        </div>
      </div>
      <div class="list-item edit hidden" value="{{d.id}}">
-       <div class="header">
-         <h3>Edit Discussion</h3>
-       </div>
        <form id="edit-discussion-{{d.id}}" class="" action="" method="post">
+         <div class="header">
+           <h3>Edit Discussion</h3>
+         </div>
          {% csrf_token %}
          {{f}}
          <div class="button-row">
@@ -43,10 +43,18 @@
   </div>
 </div>
 <div class="list-footer">
-  <button type="button" id="add" name="button"><img draggable="false" src="{% static 'media/plus.svg' %}" alt="Add"></button>
-    <button type="button" id="edit" name="button"><img draggable="false" src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
-    <button type="button" id="share" name="button"><img draggable="false" src="{% static 'media/share.svg' %}" alt="Share"></button>
-    <button type="button" id="delete" name="delete"><img src="{% static 'media/trash.svg' %}" alt="Delete"></button>
+  <div class="button">
+    <button type="button" id="add" name="button"><img draggable="false" src="{% static 'media/plus.svg' %}" alt="Add"></button>
+    </div>
+    <div class="button">
+      <button type="button" id="edit" name="button"><img draggable="false" src="{% static 'media/pencil.svg' %}" alt="Edit"></button>
+      </div>
+    <div class="button">
+      <button type="button" id="share" name="button"><img draggable="false" src="{% static 'media/share.svg' %}" alt="Share"></button>
+      </div>
+    <div class="button">
+      <button type="button" id="delete" name="delete"><img src="{% static 'media/trash.svg' %}" alt="Delete"></button>
+      </div>
 </div>
 <div id="addModal" class="modal-bg hidden">
 <div class="modal-content">

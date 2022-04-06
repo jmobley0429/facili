@@ -5,16 +5,22 @@
 <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 {% endblock %} {% block content %}
 <div class="header row">
+  {% if discussion %}
   {% if not facilitators %}
   <span> This discussion doesn't have any facilitators yet...share the link to get started!</span>
   <a class="btn muted" href="{% url 'share-discussion' pk=discussion.id %}"><img src="{% static 'media/share.svg' %}" alt=""></a>
+  {% endif %}
   {% endif %}
 <div class="select">
   <form class="" action="" id="change-discussion" method="post">
     {% csrf_token %}
     <label for="select-discussion">Select Discussion</label>
     <select name="select-discussion" onchange="this.form.submit()">
+
       {% for d in all_discussions %}
+      <option value="" {% if not discussion %}
+       selected="selected"
+      {% endif %}>Select a discussion...</option>
       <div class="option">
         <option value="{{d.id}}" {% if d.title == discussion.title%}
          selected="selected"
@@ -24,11 +30,28 @@
       {% endfor %}
     </select>
   </form>
-  <div class="list-item">
+  <div id="facilitatorList" class="col list-item ">
+    <div class="list-header">
       <h4>Facilitators</h4>
-      {% for f in facilitators %}
-        <p>{{f.name}}</p>
-      {% endfor %}
+      <button  id="openFacilitatorList" class="btn muted" type="button"><img src="{% static 'media/down-arrow.svg' %}" alt="View Facilitators"></button>
+    </div>
+    <div class="content hidden col">
+      <ul id="facilitatorList" >
+        {% for f in facilitators %}
+        <li>{{f.name}}</li>
+        {% endfor %}
+      </ul>
+      <form class="" action="" method="post">
+        <select class="" name="add-facilitators">
+          <option value="" selected="selected">Add Facilitator</option>
+          {% for index, name in users.items %}
+          <option value="{{index}}">{{name}}</option>
+          {% endfor %}
+          <select>
+      </form>
+        </div>
+    </div>
+          
   </div>
 </div>
   {% if discussion %}
@@ -36,19 +59,23 @@
     <div class="list-body">
       {% if all_topics_zip %} {% for t, f in all_topics_zip%}
       <div class="list-item" value="{{t.id}}">
+        <div class="content">
         <h3>{{t.title}}</h3>
         <p>{{t.description}}</p>
       </div>
+      <button class="btn muted" type="button" id="openTopic" value="{{t.id}}"><img src="{% static 'media/chat.svg' %}" alt="Chat"></button>
+      </div>
       <div class="{{t.id}}">
-        <div class="list-item">
+        <div class="list-item edit hidden" value="{{t.id}}">
+          <div class="content">
           <h3>{{t.title}}</h3>
           <p>{{t.description}}</p>
             <input type="text" id="responseInput" value="">
             <button type="button" id="submitResponseButton" value="{{t.id}}" >Add</button>
               {{ t.id|json_script:"feed-item"}}
-              <div class="scroll-list">
-                <div id="liveFeed" class="list-body"></div>
-              </div>
+                <div id="liveFeed" class="list-body">
+                </div>
+            </div>
           </div>
         </div>
       </div>

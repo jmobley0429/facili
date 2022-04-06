@@ -1,4 +1,5 @@
 import { multiToggle } from "./utils.js";
+import StringObj from "./utils.js";
 
 const formDivs = document.querySelectorAll("div.list-item.edit");
 const showDivs = document.querySelectorAll(".list-item");
@@ -25,7 +26,7 @@ function hideForms() {
   });
 }
 
-function addDivSelect(pageType) {
+export function addDivSelect(pageType) {
   showDivs.forEach((div, i) => {
     if (!div.classList.contains("edit")) {
       div.addEventListener("click", e => {
@@ -224,4 +225,60 @@ export function initStdPages(pageType) {
 
 export function initDiscussPage(pageType) {
   addDivSelect(pageType);
+}
+
+export function generateTooltips(pageType) {
+  let buttonDivs = [...document.querySelectorAll("div.button")];
+  let buttons = document.querySelectorAll("div.button > button");
+  let verbs = {
+    Add: "a new",
+    Edit: "the selected",
+    Delete: "the selected",
+    Share: "the selected"
+  };
+
+  buttons.forEach((btn, i) => {
+    var timer;
+    var touchduration = 700;
+    function touchstart() {
+      e.preventDefault();
+      if (!timer) {
+        timer = setTimeout(onlongtouch, touchduration);
+      }
+    }
+    function touchend() {
+      let span = div.getElementsByClassName("tooltip")[0];
+      clearTimeout(timer);
+      span.style.display = "none";
+    }
+
+    let onlongtouch = function() {
+      hoverTooltip;
+    };
+    let id = new StringObj(btn.getAttribute("id")).capitalize();
+    let tooltip = document.createElement("span");
+    let middleText = verbs[id];
+    tooltip.textContent = `${id} ${middleText} ${pageType}.`;
+    tooltip.classList.add("tooltip");
+    buttonDivs[i].appendChild(tooltip);
+    buttonDivs[i].onmouseover = function(e) {
+      hoverTooltip(e);
+    };
+    buttonDivs[i].addEventListener("touchstart", touchstart);
+    buttonDivs[i].addEventListener("touchend", touchend);
+  });
+}
+
+function clearTooltip(e) {}
+
+function hoverTooltip(e) {
+  let div = e.currentTarget;
+  let span = div.getElementsByClassName("tooltip")[0];
+  var timeout = setTimeout(() => {
+    span.style.display = "inline-block";
+  }, 700);
+  div.onmouseout = function() {
+    clearTimeout(timeout);
+    span.style.display = "none";
+  };
 }
