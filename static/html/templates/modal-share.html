@@ -1,0 +1,13 @@
+<div id="addModal" class="modal-bg hidden">
+<div class="modal-content">
+  <div class="header">
+    <h2 id="modalFormHeader"></h2>
+    <div id="exitEdit">""</div>
+  </div>
+  <form id="add-item"  action="" method="post">
+         {% csrf_token %}
+         {{ add_form }}
+         <button type="submit" form="add-item"></button>
+       </form>
+     </div>
+</div>

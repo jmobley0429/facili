@@ -19,7 +19,7 @@
      </div>
      {% else %}
      {% for d, f in discussion_zip %}
-     <div class="list-item" value={{d.id}}>
+     <div class="list-item content" value={{d.id}}>
        <div class="content">
          <h3>{{d.title}}</h3>
          <p>{{ d.description }}</p>
@@ -28,13 +28,13 @@
      <div class="list-item edit hidden" value="{{d.id}}">
        <form id="edit-discussion-{{d.id}}" class="" action="" method="post">
          <div class="header">
-           <h3>Edit Discussion</h3>
+           <h3 >Edit</h3>
          </div>
          {% csrf_token %}
          {{f}}
          <div class="button-row">
            <button type="submit" form="edit-discussion-{{d.id}}" value="{{d.id}}" name="edit-discussion">Save</button>
-           <button type="button"  value="{{d.id}}" id="cancelEdit" name="cancel-edit">Cancel</button>
+           <button type="button"  value="{{d.id}}" id="cancelEdit">Cancel</button>
          </div>
        </form>
      </div>
@@ -56,67 +56,7 @@
       <button type="button" id="delete" name="delete"><img src="{% static 'media/trash.svg' %}" alt="Delete"></button>
       </div>
 </div>
-<div id="addModal" class="modal-bg hidden">
-<div class="modal-content">
-  <div class="header">
-    <h2>New Discussion</h2>
-    <div id="exitEdit">""</div>
-  </div>
-  <form id="add-discussion"  action="" method="post">
-         {% csrf_token %}
-         {{ add_form }}
-         <button type="submit" form="add-discussion" name="add-discussion">Save Discussion</button>
-       </form>
-     </div>
-</div>
-<div id="shareModal" class="modal-bg hidden">
-<div class="modal-content">
-  <div class="header">
-    <h2>Share Discussion</h2>
-    <div id="exitShare">""</div>
-  </div>
-  <div class="share-content">
-  <span id="shareLink"></span>
-    <button
-      id="copyLink"
-      type="button"
-      name="share-link"
-    >
-      <img class="btn muted"  src="{% static 'media/copy.svg' %}" alt="Copy">
-    </button>
-  </div>
-</div>
-</div>
-<div id="deleteModal" class="modal-bg hidden">
-<div class="modal-content">
-  <div class="header">
-    <h2>Delete Discussion</h2>
-    <div id="exitDelete">""</div>
-  </div>
-  <div>
-  <h4></h4>
-  <form id="confirmDelete" action="" method="post">
-    <span >Are you sure you want to delete this discussion?</span>
-    {% csrf_token %}
-  <div class="button-row">
-    <button
-    id="confirmDelete"
-    type="submit"
-    name="delete-item"
-    form="confirmDelete"
-    >
-    Yes, Delete.
-  </button>
-  <button
-    id="cancelDelete"
-    type="button"
-  >
-    Cancel
-  </button>
-  </div>
-  </form>
-
-  </div>
-</div>
-</div>
+{% include 'templates/modal-form.html' %}
+{% include 'templates/modal-share.html' %}
+{% include 'templates/modal-warn-delete.html' %}
 {% endblock %}

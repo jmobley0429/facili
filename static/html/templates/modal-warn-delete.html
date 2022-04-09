@@ -1,0 +1,27 @@
+<div id="deleteModal" class="modal-bg hidden">
+  <div class="modal-content">
+    <div class="header">
+      <h2 id="deleteModalHeader"></h2>
+      <div id="exitDelete">""</div>
+    </div>
+    <div>
+      <form id="confirmDelete" action="" method="post">
+        <span>Are you sure you want to delete this?</span>
+        {% csrf_token %}
+        <div class="button-row">
+          <button
+            id="confirmDelete"
+            type="submit"
+            name="delete-item"
+            form="confirmDelete"
+          >
+            Yes, Delete.
+          </button>
+          <button id="cancelDelete" type="button">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
